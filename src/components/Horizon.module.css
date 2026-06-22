@@ -1,0 +1,41 @@
+.text,
+.field {
+  font-family: 'IBM Plex Mono', 'Courier New', monospace;
+  font-size: clamp(1.7rem, 5vw, 2.8rem);
+  font-weight: 300;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+}
+
+.text {
+  white-space: pre-wrap;
+  cursor: text;
+  transition: opacity 0.5s ease;
+}
+
+.text:focus-visible {
+  outline: none;
+  opacity: 0.65;
+}
+
+.empty {
+  color: var(--text-secondary);
+  font-style: italic;
+  opacity: 0.75;
+}
+
+.field::placeholder {
+  color: var(--text-secondary);
+  font-style: italic;
+  opacity: 0.6;
+}
+
+/* Тихий счётчик: не стрик, а ощущение непрерывности. */
+.days {
+  margin-top: 1rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  opacity: 0.7;
+}

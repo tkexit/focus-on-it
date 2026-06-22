@@ -1,0 +1,61 @@
+.page {
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  /* env(safe-area-inset-*) — чтобы текст не заезжал под чёлку и home-индикатор iPhone */
+  padding: calc(clamp(3rem, 12vh, 8rem) + env(safe-area-inset-top, 0px))
+    calc(1.5rem + env(safe-area-inset-right, 0px))
+    calc(7rem + env(safe-area-inset-bottom, 0px))
+    calc(1.5rem + env(safe-area-inset-left, 0px));
+}
+
+.column {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3rem, 9vh, 5.5rem);
+  animation: rise 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* Единственная кнопка: тихая точка снизу — путь назад. */
+.dot {
+  position: fixed;
+  left: 50%;
+  bottom: calc(clamp(1.5rem, 5vh, 2.5rem) + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  opacity: 0.25;
+  cursor: pointer;
+  z-index: 50;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.dot:hover,
+.dot:focus-visible {
+  opacity: 0.75;
+  outline: none;
+  transform: translateX(-50%) scale(1.25);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .column {
+    animation: none;
+  }
+}

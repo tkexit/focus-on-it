@@ -1,0 +1,23 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+npm-debug.log*
+*.tsbuildinfo
+
+# Генерируется заново при каждом `cap sync` из dist/
+ios/App/App/public
+ios/App/App/capacitor.config.json
+
+# Xcode
+ios/App/App.xcodeproj/xcuserdata
+ios/App/App.xcodeproj/project.xcworkspace/xcuserdata
+ios/DerivedData
+
+# CocoaPods
+ios/App/Pods/
+
+# Environment
+.env
+.env.local

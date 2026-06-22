@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173/)",
+      "Bash(curl -s http://localhost:5173/src/main.tsx)",
+      "Bash(curl -s http://localhost:5173/src/App.tsx)",
+      "Bash(curl -s \"http://localhost:5173/src/components/Section.module.css\")",
+      "Bash(curl -s http://localhost:5173)",
+      "Bash(npx tsc *)",
+      "Skill(run)",
+      "Skill(run:*)",
+      "Bash(xcodebuild -project /Users/k.exit/Desktop/slow/ios/App/App.xcodeproj -list)",
+      "Bash(xcodebuild -runFirstLaunch)",
+      "Bash(echo \"exit=$?\")",
+      "Bash(xcodebuild -downloadPlatform iOS)"
+    ]
+  }
+}
