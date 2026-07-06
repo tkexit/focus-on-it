@@ -85,6 +85,12 @@
   gap: 1.6rem;
 }
 
+.account {
+  margin-top: 2.4rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--border);
+}
+
 .quietButton {
   border: none;
   padding: 0;

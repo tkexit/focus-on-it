@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Capacitor } from '@capacitor/core'
 import App from './App'
+import { AuthProvider } from './auth/AuthContext'
 import { initNative } from './native'
 import '@fontsource/ibm-plex-mono/300.css'
 import '@fontsource/ibm-plex-mono/400.css'
@@ -13,7 +14,9 @@ initNative()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </StrictMode>,
 )
 
