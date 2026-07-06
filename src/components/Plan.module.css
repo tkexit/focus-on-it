@@ -6,6 +6,14 @@
   color: var(--text-secondary);
 }
 
+/* iOS зумит страницу при фокусе на поле мельче 16px — на touch держим 1rem,
+   тихость сохраняется цветом и весом, а не кеглем. */
+@media (pointer: coarse) {
+  .field {
+    font-size: 1rem;
+  }
+}
+
 .field::placeholder {
   color: var(--text-secondary);
   font-style: italic;

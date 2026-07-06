@@ -6,7 +6,11 @@
   background: var(--bg);
   display: flex;
   justify-content: center;
-  padding: clamp(3rem, 12vh, 8rem) 1.5rem 7rem;
+  /* env(safe-area-inset-*) — чтобы записи не уходили под чёлку в ландшафте. */
+  padding: calc(clamp(3rem, 12vh, 8rem) + env(safe-area-inset-top, 0px))
+    calc(1.5rem + env(safe-area-inset-right, 0px))
+    calc(7rem + env(safe-area-inset-bottom, 0px))
+    calc(1.5rem + env(safe-area-inset-left, 0px));
   animation: fade 0.7s ease both;
 }
 
@@ -60,6 +64,8 @@
   line-height: 1.75;
   color: var(--text-primary);
   white-space: pre-wrap;
+  /* Длинное слово или ссылка не должны растягивать страницу вширь. */
+  overflow-wrap: anywhere;
 }
 
 .footer {

@@ -35,6 +35,12 @@ export function GrowingTextarea({
   // Подгоняем высоту под текст при каждом изменении значения.
   useEffect(resize, [value])
 
+  // И при смене ширины (поворот экрана, ресайз окна) — иначе текст обрежется.
+  useEffect(() => {
+    window.addEventListener('resize', resize)
+    return () => window.removeEventListener('resize', resize)
+  }, [])
+
   // Курсор в конец при автофокусе (вход в режим правки горизонта).
   useEffect(() => {
     if (!autoFocus) return
