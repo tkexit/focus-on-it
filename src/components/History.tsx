@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useAuth } from '../auth/AuthContext'
 import type { NowEntry } from '../types'
 import { formatLong } from '../utils/date'
 import styles from './History.module.css'
@@ -14,6 +15,15 @@ interface Props {
 /** Тихий путь назад: прошлые записи «сейчас» по датам. Скрыт по умолчанию. */
 export function History({ entries, open, onClose, onExport, onImport }: Props) {
   const fileRef = useRef<HTMLInputElement>(null)
+  const auth = useAuth()
+
+  const handleSignIn = (provider: 'google' | 'apple') => {
+    auth.signIn(provider).catch((err) => {
+      // Не роняем тихое место, но причину (провайдер не настроен, сеть)
+      // оставляем в консоли — иначе отказ входа не отладить.
+      console.error('sign-in failed:', err)
+    })
+  }
 
   useEffect(() => {
     if (!open) return
@@ -73,6 +83,45 @@ export function History({ entries, open, onClose, onExport, onImport }: Props) {
               }}
             />
           </div>
+
+          {auth.enabled && (
+            <div className={styles.account}>
+              {auth.session ? (
+                <>
+                  <p className={styles.note}>{auth.session.user.email}</p>
+                  <div className={styles.actions}>
+                    <button
+                      type="button"
+                      className={styles.quietButton}
+                      onClick={() => auth.signOut()}
+                    >
+                      Sign out
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className={styles.note}>Sign in to keep your notes across devices.</p>
+                  <div className={styles.actions}>
+                    <button
+                      type="button"
+                      className={styles.quietButton}
+                      onClick={() => handleSignIn('google')}
+                    >
+                      Continue with Google
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.quietButton}
+                      onClick={() => handleSignIn('apple')}
+                    >
+                      Continue with Apple
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
         </footer>
       </div>
     </div>

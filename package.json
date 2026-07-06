@@ -11,11 +11,14 @@
     "ios:open": "npm run ios:sync && cap open ios"
   },
   "dependencies": {
+    "@capacitor/app": "^8.1.0",
+    "@capacitor/browser": "^8.0.3",
     "@capacitor/core": "^8.4.0",
     "@capacitor/ios": "^8.4.0",
     "@capacitor/preferences": "^8.0.1",
     "@capacitor/status-bar": "^8.0.2",
     "@fontsource/ibm-plex-mono": "^5.2.7",
+    "@supabase/supabase-js": "^2.110.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
