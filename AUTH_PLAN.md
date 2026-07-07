@@ -59,7 +59,7 @@
   логина при старте.
 - Залогинен: email + «Выйти» + «Удалить аккаунт».
 
-### Фаза 3 — синхронизация
+### Фаза 3 — синхронизация (детализирована в SYNC_PLAN.md)
 - Таблица `states`: `user_id uuid PK → auth.users`, `state jsonb`,
   `updated_at timestamptz`. RLS: `auth.uid() = user_id` на всё.
 - `persist.ts` расширить третьим write-through: локально мгновенно, в облако
