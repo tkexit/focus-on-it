@@ -46,8 +46,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const handle = CapApp.addListener('appUrlOpen', async ({ url }) => {
       if (!url.startsWith(authRedirectUrl)) return
       Browser.close().catch(() => {})
-      const code = new URL(url).searchParams.get('code')
-      if (code) await client.auth.exchangeCodeForSession(code).catch(() => {})
+      const params = new URL(url).searchParams
+      // Провайдер вернул отказ (отмена, access_denied) — кода не будет.
+      // Тихое место не ломаем, но причину оставляем в консоли, иначе
+      // молчаливый провал входа на устройстве нечем отладить.
+      const denied = params.get('error_description') ?? params.get('error')
+      if (denied) {
+        console.error('sign-in failed:', denied)
+        return
+      }
+      const code = params.get('code')
+      if (!code) return
+      const { error } = await client.auth.exchangeCodeForSession(code)
+      if (error) console.error('sign-in failed:', error.message)
     })
     return () => {
       handle.then((h) => h.remove())
