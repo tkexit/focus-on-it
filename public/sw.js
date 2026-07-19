@@ -1,4 +1,4 @@
-/* Минимальный оффлайн: навигация — сеть с откатом в кэш, ассеты — кэш-first. */
+/* Minimal offline: navigation — network with cache fallback, assets — cache-first. */
 const CACHE = 'slow-mode-v1'
 
 self.addEventListener('install', (e) => {

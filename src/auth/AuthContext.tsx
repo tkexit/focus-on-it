@@ -9,12 +9,12 @@ import {
 import type { Session } from '@supabase/supabase-js'
 import { App as CapApp } from '@capacitor/app'
 import { Browser } from '@capacitor/browser'
-import { authRedirectUrl, isAuthEnabled, isNative, supabase } from './client'
+import { authRedirectUrl, getClient, isAuthEnabled, isNative } from './client'
 
 export type OAuthProvider = 'google' | 'apple'
 
 interface AuthValue {
-  /** false, когда нет ключей Supabase — вход-UI не показываем вовсе. */
+  /** false when there are no Supabase keys — we don't show sign-in UI at all. */
   enabled: boolean
   session: Session | null
   signIn: (provider: OAuthProvider) => Promise<void>
@@ -31,23 +31,34 @@ const AuthContext = createContext<AuthValue>({
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
 
-  // Поднимаем сохранённую сессию и следим за её сменой (вход/выход/refresh).
+  // Restore the saved session and track its changes (sign-in/sign-out/refresh).
   useEffect(() => {
-    if (!supabase) return
-    supabase.auth.getSession().then(({ data }) => setSession(data.session))
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => setSession(s))
-    return () => sub.subscription.unsubscribe()
+    const clientPromise = getClient()
+    if (!clientPromise) return
+    let cancelled = false
+    let unsubscribe: (() => void) | undefined
+    clientPromise.then((client) => {
+      if (cancelled) return
+      client.auth.getSession().then(({ data }) => setSession(data.session))
+      const { data: sub } = client.auth.onAuthStateChange((_event, s) => setSession(s))
+      unsubscribe = () => sub.subscription.unsubscribe()
+    })
+    return () => {
+      cancelled = true
+      unsubscribe?.()
+    }
   }, [])
 
-  // Устройство: провайдер возвращает в приложение по deep link с кодом PKCE.
+  // On device: the provider returns to the app via a deep link with a PKCE code.
   useEffect(() => {
-    if (!supabase || !isNative) return
-    const client = supabase
+    if (!isAuthEnabled || !isNative) return
     const handle = CapApp.addListener('appUrlOpen', async ({ url }) => {
       if (!url.startsWith(authRedirectUrl)) return
       Browser.close().catch(() => {})
       const code = new URL(url).searchParams.get('code')
-      if (code) await client.auth.exchangeCodeForSession(code).catch(() => {})
+      if (!code) return
+      const client = await getClient()
+      if (client) await client.auth.exchangeCodeForSession(code).catch(() => {})
     })
     return () => {
       handle.then((h) => h.remove())
@@ -55,13 +66,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signIn = useCallback(async (provider: OAuthProvider) => {
-    if (!supabase) return
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const client = await getClient()
+    if (!client) return
+    const { data, error } = await client.auth.signInWithOAuth({
       provider,
       options: {
         redirectTo: authRedirectUrl,
-        // На устройстве открываем сами через SFSafariViewController:
-        // Google запрещает вход из WebView, а системный браузер — принимает.
+        // On device we open it ourselves via SFSafariViewController:
+        // Google refuses sign-in from a WebView, but accepts the system browser.
         skipBrowserRedirect: isNative,
       },
     })
@@ -70,8 +82,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signOut = useCallback(async () => {
-    if (!supabase) return
-    await supabase.auth.signOut()
+    const client = await getClient()
+    if (client) await client.auth.signOut()
   }, [])
 
   return (
