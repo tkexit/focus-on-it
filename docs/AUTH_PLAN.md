@@ -62,7 +62,7 @@ existing local storage, not a replacement for it.
   on startup.
 - Signed in: email + "Sign out" + "Delete account".
 
-### Phase 3 — sync
+### Phase 3 — sync (detailed and superseded by SYNC_PLAN.md)
 - Table `states`: `user_id uuid PK → auth.users`, `state jsonb`,
   `updated_at timestamptz`. RLS: `auth.uid() = user_id` on everything.
 - Extend `persist.ts` with a third write-through: local instantly, cloud
