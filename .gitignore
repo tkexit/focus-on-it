@@ -1,12 +1,11 @@
 node_modules
 dist
-dist-ssr
 *.local
 .DS_Store
 npm-debug.log*
 *.tsbuildinfo
 
-# Генерируется заново при каждом `cap sync` из dist/
+# Regenerated on every `cap sync` from dist/
 ios/App/App/public
 ios/App/App/capacitor.config.json
 
@@ -18,9 +17,14 @@ ios/DerivedData
 # CocoaPods
 ios/App/Pods/
 
+# Android signing — never commit the upload key or its credentials
+*.keystore
+android/keystore.properties
+
 # Environment
 .env
 .env.local
 
 # Claude Code local settings
 .claude/settings.local.json
+.claude/launch.json
