@@ -1,4 +1,4 @@
-import { createClient, type SupabaseClient } from '@supabase/supabase-js'
+import type { SupabaseClient } from '@supabase/supabase-js'
 import { Capacitor } from '@capacitor/core'
 import { Preferences } from '@capacitor/preferences'
 
@@ -8,17 +8,23 @@ const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 export const isNative = Capacitor.isNativePlatform()
 
 /**
- * Куда провайдер возвращает после входа. На устройстве — deep link
- * (схема должна совпадать с CFBundleURLTypes в Info.plist и с
- * Redirect URLs в Supabase), в вебе — текущий origin.
+ * Without keys in env, auth is simply disabled: the app runs as v1,
+ * all sign-in UI is hidden. This also enables a web deploy without secrets.
+ */
+export const isAuthEnabled = Boolean(url && anonKey)
+
+/**
+ * Where the provider returns to after sign-in. On device — a deep link
+ * (the scheme must match CFBundleURLTypes in Info.plist and the
+ * Redirect URLs in Supabase), on the web — the current origin.
  */
 export const authRedirectUrl = isNative
   ? 'com.kartoshkin.slowmode://auth-callback'
   : window.location.origin
 
 /**
- * Сессия хранится как и данные (см. persist.ts): localStorage — быстрый,
- * Preferences — переживает чистку WebView-хранилища системой.
+ * The session is stored the same way as data (see persist.ts): localStorage
+ * is fast, Preferences survives the system clearing the WebView's storage.
  */
 const sessionStorage = {
   async getItem(key: string): Promise<string | null> {
@@ -26,7 +32,7 @@ const sessionStorage = {
       const local = localStorage.getItem(key)
       if (local !== null) return local
     } catch {
-      /* приватный режим — идём в Preferences */
+      /* private mode — fall through to Preferences */
     }
     if (!isNative) return null
     const { value } = await Preferences.get({ key })
@@ -36,7 +42,7 @@ const sessionStorage = {
     try {
       localStorage.setItem(key, value)
     } catch {
-      /* переполнение — молча терпим */
+      /* quota exceeded — fail silently */
     }
     if (isNative) await Preferences.set({ key, value }).catch(() => {})
   },
@@ -44,26 +50,32 @@ const sessionStorage = {
     try {
       localStorage.removeItem(key)
     } catch {
-      /* ничего */
+      /* nothing to do */
     }
     if (isNative) await Preferences.remove({ key }).catch(() => {})
   },
 }
 
+let clientPromise: Promise<SupabaseClient> | null = null
+
 /**
- * Без ключей в env auth просто выключен: приложение работает как v1,
- * весь вход-UI скрыт. Это же спасает web-деплой без секретов.
+ * supabase-js is most of the app's bundle, so it loads as a separate
+ * chunk on demand: a build without keys never fetches it at all.
+ * The client is created once; repeated calls share the same promise.
  */
-export const supabase: SupabaseClient | null =
-  url && anonKey
-    ? createClient(url, anonKey, {
+export function getClient(): Promise<SupabaseClient> | null {
+  if (!url || !anonKey) return null
+  if (!clientPromise) {
+    clientPromise = import('@supabase/supabase-js').then(({ createClient }) =>
+      createClient(url, anonKey, {
         auth: {
           flowType: 'pkce',
           storage: sessionStorage,
-          // На устройстве callback приходит через appUrlOpen, не через URL страницы.
+          // On device the callback arrives via appUrlOpen, not the page URL.
           detectSessionInUrl: !isNative,
         },
-      })
-    : null
-
-export const isAuthEnabled = supabase !== null
+      }),
+    )
+  }
+  return clientPromise
+}
