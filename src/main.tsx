@@ -20,12 +20,12 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 )
 
-// Оффлайн только в проде: в dev service worker мешает hot reload.
-// В нативном приложении SW не нужен — файлы и так локальные.
+// Offline only in prod: in dev the service worker interferes with hot reload.
+// The native app doesn't need a SW — the files are already local.
 if ('serviceWorker' in navigator && import.meta.env.PROD && !Capacitor.isNativePlatform()) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').catch(() => {
-      /* нет SW — приложение просто работает онлайн */
+      /* no SW — the app just runs online */
     })
   })
 }

@@ -1,7 +1,7 @@
 import { Capacitor } from '@capacitor/core'
 import { StatusBar, Style } from '@capacitor/status-bar'
 
-/** Нативная инициализация iOS: статус-бар следует за темой системы. */
+/** Native iOS init: the status bar follows the system theme. */
 export function initNative() {
   if (!Capacitor.isNativePlatform()) return
 

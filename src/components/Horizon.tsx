@@ -6,13 +6,13 @@ import styles from './Horizon.module.css'
 interface Props {
   value: string
   onChange: (text: string) => void
-  /** ISO-метка последнего изменения — для тихого счётчика дней. */
+  /** ISO timestamp of the last change — for the quiet day counter. */
   updatedAt?: string
 }
 
 const PLACEHOLDER = 'What matters most to you right now?'
 
-/** Главная цель. Крупно, тихо, всегда на виду. Клик — войти в правку. */
+/** The main goal. Large, quiet, always visible. Click to enter edit mode. */
 export function Horizon({ value, onChange, updatedAt }: Props) {
   const [editing, setEditing] = useState(false)
 

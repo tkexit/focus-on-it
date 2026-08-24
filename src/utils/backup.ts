@@ -1,7 +1,7 @@
 import type { SlowModeState } from '../types'
 import { todayStr } from './date'
 
-/** Скачивает всё состояние одним читаемым JSON-файлом. */
+/** Downloads the entire state as one readable JSON file. */
 export function downloadBackup(state: SlowModeState) {
   const blob = new Blob([JSON.stringify(state, null, 2)], {
     type: 'application/json',
@@ -14,7 +14,7 @@ export function downloadBackup(state: SlowModeState) {
   URL.revokeObjectURL(url)
 }
 
-/** Читает файл бэкапа. Валидация — на стороне useStorage (normalize). */
+/** Reads a backup file. Validation happens in useStorage (normalize). */
 export async function readBackup(file: File): Promise<unknown> {
   return JSON.parse(await file.text())
 }

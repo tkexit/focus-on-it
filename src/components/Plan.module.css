@@ -6,8 +6,8 @@
   color: var(--text-secondary);
 }
 
-/* iOS зумит страницу при фокусе на поле мельче 16px — на touch держим 1rem,
-   тихость сохраняется цветом и весом, а не кеглем. */
+/* iOS zooms the page when focusing a field smaller than 16px — on touch we keep 1rem;
+   quietness comes from color and weight, not from font size. */
 @media (pointer: coarse) {
   .field {
     font-size: 1rem;

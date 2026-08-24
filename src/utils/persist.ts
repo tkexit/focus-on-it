@@ -5,7 +5,7 @@ const KEY = 'slow-mode/v1'
 
 export const isNative = Capacitor.isNativePlatform()
 
-/** Синхронное чтение для первого рендера. */
+/** Synchronous read for the first render. */
 export function loadLocal(): unknown | null {
   try {
     const raw = localStorage.getItem(KEY)
@@ -16,8 +16,8 @@ export function loadLocal(): unknown | null {
 }
 
 /**
- * iOS может почистить localStorage у WebView при нехватке места,
- * поэтому на устройстве надёжная копия живёт в нативных Preferences.
+ * iOS can clear the WebView's localStorage under storage pressure,
+ * so on device the reliable copy lives in native Preferences.
  */
 export async function loadNative(): Promise<unknown | null> {
   if (!isNative) return null
@@ -29,13 +29,13 @@ export async function loadNative(): Promise<unknown | null> {
   }
 }
 
-/** Пишем в оба хранилища: localStorage — быстрый, Preferences — выживает. */
+/** Write to both stores: localStorage is fast, Preferences survives. */
 export function persist(state: unknown) {
   const json = JSON.stringify(state)
   try {
     localStorage.setItem(KEY, json)
   } catch {
-    /* приватный режим / переполнение — молча терпим */
+    /* private mode / quota exceeded — silently tolerate it */
   }
   if (isNative) {
     Preferences.set({ key: KEY, value: json }).catch(() => {})

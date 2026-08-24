@@ -6,7 +6,7 @@ interface Props {
   onChange: (text: string) => void
 }
 
-/** Следующий шаг. Совсем тихо, почти шёпотом. Свободный текст. */
+/** The next step. Very quiet, almost a whisper. Free text. */
 export function Plan({ value, onChange }: Props) {
   return (
     <GrowingTextarea

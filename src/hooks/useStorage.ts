@@ -15,7 +15,7 @@ function defaultState(): SlowModeState {
   }
 }
 
-/** Защита от мусора в localStorage и от старых версий схемы. */
+/** Guards against garbage in localStorage and against old schema versions. */
 function normalize(raw: unknown): SlowModeState {
   const base = defaultState()
   if (!raw || typeof raw !== 'object') return base
@@ -44,8 +44,8 @@ function normalize(raw: unknown): SlowModeState {
 }
 
 /**
- * Переход дня: если запись «сейчас» относится к прошлому дню и в ней есть
- * текст — она уходит в историю, а поле «сейчас» становится чистым на сегодня.
+ * Day rollover: if the "now" entry belongs to a past day and has text,
+ * it moves into history, and "now" resets to a clean slate for today.
  */
 function rollOver(state: SlowModeState): SlowModeState {
   const today = todayStr()
@@ -73,13 +73,13 @@ function isEmpty(s: SlowModeState): boolean {
 export function useStorage() {
   const [state, setState] = useState<SlowModeState>(load)
 
-  // Последнее состояние — чтобы сбросить его на диск перед уходом со страницы.
+  // The latest state — so we can flush it to disk before leaving the page.
   const latest = useRef(state)
   latest.current = state
 
-  // На устройстве localStorage мог быть вычищен системой — поднимаем
-  // данные из нативного хранилища, но только в пустое состояние,
-  // чтобы не затереть то, что человек уже начал писать.
+  // On device localStorage may have been cleared by the system — restore
+  // data from native storage, but only into an empty state, so we never
+  // overwrite what the person has already started typing.
   useEffect(() => {
     if (!isNative) return
     loadNative().then((raw) => {
@@ -87,14 +87,14 @@ export function useStorage() {
     })
   }, [])
 
-  // Дебаунс записи: пока человек печатает, не дёргаем диск на каждый символ.
+  // Debounce the write: don't hit disk on every keystroke while typing.
   useEffect(() => {
     const id = window.setTimeout(() => persist(state), DEBOUNCE_MS)
     return () => window.clearTimeout(id)
   }, [state])
 
-  // Гарантированно сохраняем, если вкладку закрывают или прячут.
-  // А при возврате во вкладку — проверяем, не наступил ли новый день.
+  // Guarantee a save when the tab is closed or hidden.
+  // And on returning to the tab — check whether a new day has started.
   useEffect(() => {
     const flush = () => persist(latest.current)
     const onVisibility = () => {
@@ -117,8 +117,8 @@ export function useStorage() {
   }, [])
 
   const setNow = useCallback((text: string) => {
-    // Сначала прокатываем день: если запись вчерашняя, она уходит в историю,
-    // а не молча превращается в сегодняшнюю.
+    // Roll the day over first: if the entry is from yesterday, it moves
+    // into history instead of silently turning into today's entry.
     setState((s) => {
       const rolled = rollOver(s)
       return { ...rolled, now: { text, date: rolled.now.date } }
@@ -129,7 +129,7 @@ export function useStorage() {
     setState((s) => ({ ...s, plan: { text, date: todayStr() } }))
   }, [])
 
-  /** Восстановление из бэкапа: прогоняем через normalize и переход дня. */
+  /** Restore from a backup: run through normalize and the day rollover. */
   const importState = useCallback((raw: unknown) => {
     setState(rollOver(normalize(raw)))
   }, [])

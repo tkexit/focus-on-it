@@ -6,7 +6,7 @@ interface Props {
   children: ReactNode
 }
 
-/** Подпись · тонкая линия · содержимое. Один ритм для всех трёх слоёв. */
+/** Label · thin rule · content. One rhythm for all three layers. */
 export function Section({ label, children }: Props) {
   return (
     <section className={styles.section}>

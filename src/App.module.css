@@ -2,7 +2,7 @@
   min-height: 100dvh;
   display: flex;
   justify-content: center;
-  /* env(safe-area-inset-*) — чтобы текст не заезжал под чёлку и home-индикатор iPhone */
+  /* env(safe-area-inset-*) — keeps text clear of the iPhone notch and home indicator */
   padding: calc(clamp(3rem, 12vh, 8rem) + env(safe-area-inset-top, 0px))
     calc(1.5rem + env(safe-area-inset-right, 0px))
     calc(7rem + env(safe-area-inset-bottom, 0px))
@@ -18,8 +18,8 @@
   animation: rise 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-/* Единственная кнопка: тихая точка снизу — путь назад.
-   Видимая точка 5px, но зона нажатия 44×44 (Apple HIG). */
+/* The only button: a quiet dot at the bottom — the path back.
+   Visible dot is 5px, but the tap target is 44×44 (Apple HIG). */
 .dot {
   position: fixed;
   left: 50%;

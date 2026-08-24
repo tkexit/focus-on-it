@@ -6,7 +6,7 @@ interface Props {
   onChange: (text: string) => void
 }
 
-/** Где я сейчас относительно горизонта. Новое поле каждый день. */
+/** Where I am now relative to the horizon. A fresh field every day. */
 export function Now({ value, onChange }: Props) {
   return (
     <GrowingTextarea

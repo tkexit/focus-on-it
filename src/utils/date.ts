@@ -1,4 +1,4 @@
-/** Сегодняшняя дата в локальном времени как YYYY-MM-DD. */
+/** Today's date in local time as YYYY-MM-DD. */
 export function todayStr(): string {
   const d = new Date()
   const y = d.getFullYear()
@@ -13,7 +13,7 @@ const longFormat = new Intl.DateTimeFormat('en-US', {
   day: 'numeric',
 })
 
-/** Полных календарных дней с момента iso до сегодня (локальное время). */
+/** Full calendar days from iso until today (local time). */
 export function daysSince(iso: string): number {
   const then = new Date(iso)
   if (Number.isNaN(then.getTime())) return 0
@@ -23,7 +23,7 @@ export function daysSince(iso: string): number {
   return Math.max(0, Math.round((b.getTime() - a.getTime()) / 86_400_000))
 }
 
-/** «Friday, May 31» — для записей истории. */
+/** "Friday, May 31" — for history entries. */
 export function formatLong(dateStr: string): string {
   const [y, m, d] = dateStr.split('-').map(Number)
   if (!y || !m || !d) return dateStr
