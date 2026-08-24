@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  /** Без этих двух auth выключен и приложение работает как v1. */
+  /** Without both of these, auth is disabled and the app runs as v1. */
   readonly VITE_SUPABASE_URL?: string
   readonly VITE_SUPABASE_ANON_KEY?: string
 }

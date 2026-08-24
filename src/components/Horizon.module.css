@@ -10,7 +10,7 @@
 
 .text {
   white-space: pre-wrap;
-  /* Длинное слово или ссылка не должны растягивать страницу вширь. */
+  /* A long word or link shouldn't stretch the page wider. */
   overflow-wrap: anywhere;
   cursor: text;
   transition: opacity 0.5s ease;
@@ -33,7 +33,7 @@
   opacity: 0.6;
 }
 
-/* Тихий счётчик: не стрик, а ощущение непрерывности. */
+/* A quiet counter: not a streak, just a sense of continuity. */
 .days {
   margin-top: 1rem;
   font-size: 0.72rem;

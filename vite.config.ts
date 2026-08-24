@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    // Порт из окружения (preview-панель назначает свой), иначе дефолт Vite.
+    // Port from the environment (the preview panel assigns its own), otherwise Vite's default.
     port: Number(process.env.PORT) || 5173,
   },
 })

@@ -1,16 +1,16 @@
 export interface Horizon {
   text: string
-  updatedAt: string // ISO timestamp — меняется редко
+  updatedAt: string // ISO timestamp — changes rarely
 }
 
 export interface Now {
   text: string
-  date: string // YYYY-MM-DD — обновляется каждый день
+  date: string // YYYY-MM-DD — updated every day
 }
 
 export interface Plan {
   text: string
-  date: string // YYYY-MM-DD — последнее касание
+  date: string // YYYY-MM-DD — last touched
 }
 
 export interface NowEntry {
@@ -22,5 +22,5 @@ export interface SlowModeState {
   horizon: Horizon
   now: Now
   plan: Plan
-  history: NowEntry[] // предыдущие записи «сейчас», новые — первыми
+  history: NowEntry[] // previous "now" entries, newest first
 }

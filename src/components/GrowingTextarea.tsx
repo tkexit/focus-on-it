@@ -6,13 +6,13 @@ interface Props {
   placeholder?: string
   className?: string
   autoFocus?: boolean
-  /** Вызывается при Enter без Shift (для однополевого редактирования). */
+  /** Called on Enter without Shift (for single-field editing). */
   onEnter?: () => void
   onBlur?: () => void
   'aria-label'?: string
 }
 
-/** Textarea без рамок, которая растёт ровно под свой текст. */
+/** A borderless textarea that grows to fit its own text. */
 export function GrowingTextarea({
   value,
   onChange,
@@ -32,16 +32,16 @@ export function GrowingTextarea({
     el.style.height = `${el.scrollHeight}px`
   }
 
-  // Подгоняем высоту под текст при каждом изменении значения.
+  // Fit the height to the text on every value change.
   useEffect(resize, [value])
 
-  // И при смене ширины (поворот экрана, ресайз окна) — иначе текст обрежется.
+  // And on width changes (screen rotation, window resize) — otherwise the text would clip.
   useEffect(() => {
     window.addEventListener('resize', resize)
     return () => window.removeEventListener('resize', resize)
   }, [])
 
-  // Курсор в конец при автофокусе (вход в режим правки горизонта).
+  // Cursor to the end on autofocus (entering horizon edit mode).
   useEffect(() => {
     if (!autoFocus) return
     const el = ref.current

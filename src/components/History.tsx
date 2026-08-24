@@ -12,15 +12,15 @@ interface Props {
   onImport: (file: File) => void
 }
 
-/** Тихий путь назад: прошлые записи «сейчас» по датам. Скрыт по умолчанию. */
+/** The quiet path back: past "now" entries by date. Hidden by default. */
 export function History({ entries, open, onClose, onExport, onImport }: Props) {
   const fileRef = useRef<HTMLInputElement>(null)
   const auth = useAuth()
 
   const handleSignIn = (provider: 'google' | 'apple') => {
     auth.signIn(provider).catch((err) => {
-      // Не роняем тихое место, но причину (провайдер не настроен, сеть)
-      // оставляем в консоли — иначе отказ входа не отладить.
+      // Don't let this quiet place crash, but keep the reason (provider not
+      // configured, network) in the console — otherwise a sign-in failure is undebuggable.
       console.error('sign-in failed:', err)
     })
   }

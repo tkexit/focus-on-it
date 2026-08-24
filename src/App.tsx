@@ -16,7 +16,7 @@ export default function App() {
     try {
       importState(await readBackup(file))
     } catch {
-      /* не тот файл — тихо игнорируем, ничего не ломаем */
+      /* wrong file — silently ignore, don't break anything */
     }
   }
 

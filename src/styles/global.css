@@ -1,4 +1,4 @@
-/* Лист тёплой бумаги, на котором человек пишет себе. */
+/* A sheet of warm paper the person writes to themselves on. */
 :root {
   --bg: #f5f2ec;
   --text-primary: #1a1814;
@@ -9,7 +9,7 @@
   color-scheme: light dark;
 }
 
-/* Тёмная тема: та же бумага при выключенном свете — тёплая, не угольная. */
+/* Dark theme: the same paper with the lights off — warm, not charcoal. */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #1c1915;
@@ -37,7 +37,7 @@ body,
 body {
   background: var(--bg);
   color: var(--text-primary);
-  /* iOS WebView: не раздувать текст при повороте и не подсвечивать тапы */
+  /* iOS WebView: don't inflate text on rotation and don't highlight taps */
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
   font-family: 'IBM Plex Mono', 'Courier New', monospace;
