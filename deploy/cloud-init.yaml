@@ -1,0 +1,39 @@
+#cloud-config
+# Paste this as user-data when creating the Hetzner server (Console -> server
+# creation -> Cloud config). It collapses Phases 3-4 of docs/LANDING_DEPLOY.md:
+# a non-root `deploy` user with key-only SSH, Docker, and the app directory.
+#
+# Afterwards, from the repo root:
+#   rsync -avz deploy/Caddyfile deploy/docker-compose.yml deploy@HOST:/opt/slowmode/
+#   ./scripts/deploy.sh all
+#   ssh deploy@HOST 'cd /opt/slowmode && docker compose up -d'
+#
+# The authorized key below is ~/.ssh/id_ed25519_personal.pub. Public keys are
+# not secrets — this file is safe to commit.
+
+package_update: true
+package_upgrade: true
+
+users:
+  - name: deploy
+    groups: [sudo]
+    shell: /bin/bash
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOykiHdOTD2T0Qwd14GgzRPIzi96Yu0Pflr2l9Aw54zS evg.kartoshkin@gmail.com
+
+ssh_pwauth: false
+disable_root: true
+
+packages:
+  - unattended-upgrades
+  - rsync
+
+runcmd:
+  # Docker's installer creates the `docker` group, so membership cannot be
+  # declared under users: above — the group does not exist at that point.
+  - curl -fsSL https://get.docker.com | sh
+  - usermod -aG docker deploy
+  - mkdir -p /opt/slowmode/site/landing /opt/slowmode/site/app
+  - chown -R deploy:deploy /opt/slowmode
+  - dpkg-reconfigure -f noninteractive unattended-upgrades

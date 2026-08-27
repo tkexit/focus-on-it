@@ -1,0 +1,18 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    container_name: slowmode-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # HTTP/3
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./site:/srv:ro # site/landing + site/app
+      - caddy_data:/data # issued certificates — never delete this volume
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -3,6 +3,8 @@
   inset: 0;
   z-index: 40;
   overflow-y: auto;
+  /* Scrolling history shouldn't scroll the page underneath it. */
+  overscroll-behavior: contain;
   background: var(--bg);
   display: flex;
   justify-content: center;

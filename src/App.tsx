@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { App as CapApp } from '@capacitor/app'
+import { Capacitor } from '@capacitor/core'
 import { Section } from './components/Section'
 import { Horizon } from './components/Horizon'
 import { Now } from './components/Now'
@@ -11,6 +13,19 @@ import styles from './App.module.css'
 export default function App() {
   const { state, setHorizon, setNow, setPlan, importState } = useStorage()
   const [historyOpen, setHistoryOpen] = useState(false)
+
+  // Android hardware back: close the History panel if open, else background
+  // the app instead of doing nothing.
+  useEffect(() => {
+    if (Capacitor.getPlatform() !== 'android') return
+    const listener = CapApp.addListener('backButton', () => {
+      if (historyOpen) setHistoryOpen(false)
+      else CapApp.minimizeApp()
+    })
+    return () => {
+      listener.then((l) => l.remove())
+    }
+  }, [historyOpen])
 
   const handleImport = async (file: File) => {
     try {

@@ -16,7 +16,16 @@
     <title>Slow Mode</title>
 
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- Paper color before CSS loads: no white flash in dark mode. -->
+    <style>
+      html { background: #f5f2ec; }
+      @media (prefers-color-scheme: dark) {
+        html { background: #1c1915; }
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

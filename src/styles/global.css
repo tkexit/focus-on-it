@@ -34,6 +34,11 @@ body,
   height: 100%;
 }
 
+/* Background on html too: Safari's rubber-band overscroll reveals exactly this. */
+html {
+  background: var(--bg);
+}
+
 body {
   background: var(--bg);
   color: var(--text-primary);
