@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The app's paper background; shows behind the status/navigation bars
+         under Android 15+ enforced edge-to-edge. -->
+    <color name="paper">#F5F2EC</color>
+</resources>

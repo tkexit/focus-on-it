@@ -1,0 +1,48 @@
+# Slow Mode — two static sites on one box.
+#
+#   focus.kexit.dev  the landing page (landing/index.html + og.png)
+#   app.kexit.dev    the React app (dist/ from `npm run build`)
+#
+# Caddy obtains and renews Let's Encrypt certificates automatically. Both names
+# must already resolve to this server or issuance fails.
+
+focus.kexit.dev {
+	root * /srv/landing
+	encode zstd gzip
+	file_server
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options    "nosniff"
+		Referrer-Policy           "strict-origin-when-cross-origin"
+		X-Frame-Options           "DENY"
+	}
+
+	# The page is edited in place and rsynced; never let a proxy pin an old copy.
+	header /index.html Cache-Control "no-cache"
+}
+
+app.kexit.dev {
+	root * /srv/app
+	encode zstd gzip
+
+	# SPA fallback: the app has no router today, but a deep link must not 404.
+	try_files {path} /index.html
+	file_server
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options    "nosniff"
+		Referrer-Policy           "strict-origin-when-cross-origin"
+		X-Frame-Options           "DENY"
+	}
+
+	# Vite content-hashes everything under /assets, so it is safe to pin forever.
+	header /assets/* Cache-Control "public, max-age=31536000, immutable"
+
+	# These three are fetched by name on every load. A long cache here would
+	# strand users on a stale build — src/main.tsx registers /sw.js in prod.
+	header /index.html           Cache-Control "no-cache"
+	header /sw.js                Cache-Control "no-cache"
+	header /manifest.webmanifest Cache-Control "no-cache"
+}

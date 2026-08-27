@@ -1,4 +1,6 @@
 .page {
+  /* Fallback for iOS 15.0–15.3, where dvh doesn't exist yet. */
+  min-height: 100vh;
   min-height: 100dvh;
   display: flex;
   justify-content: center;
@@ -53,6 +55,13 @@
 .dot:focus-visible::after {
   opacity: 0.75;
   transform: translate(-50%, -50%) scale(1.25);
+}
+
+/* No hover on phones — a bit more visible, but still quiet. */
+@media (pointer: coarse) {
+  .dot::after {
+    opacity: 0.4;
+  }
 }
 
 .dot:focus-visible {
