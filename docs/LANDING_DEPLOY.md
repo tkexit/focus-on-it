@@ -246,7 +246,7 @@ a browser never issues the plain-HTTP request in the first place.
 - **Backups**: not really needed — everything is in git and the box is
   disposable. A Hetzner snapshot (~20% of server cost) is optional insurance.
 - **Uptime check**: a free external monitor (UptimeRobot etc.) on both URLs.
-- **Analytics**: wired, but still on the placeholder ID — see below.
+- **Analytics**: wired with Measurement ID `G-SNDH5787L7` — see below.
 
 ## Phase 8 — Analytics: GA4 with Consent Mode v2
 
@@ -271,8 +271,10 @@ cookieless tool like Plausible; both were declined.
 - While the banner is up, `body.consent-open` adds bottom padding sized from JS
   (`--consent-space`), so the fixed bar never covers the footer CTA.
 
-The **Measurement ID is still the placeholder `G-XXXXXXXXXX`**, in three places:
-the explanatory comment, the `gtag('config', …)` call, and the `gtag.js` URL.
+The **Measurement ID is `G-SNDH5787L7`**, in three places: the explanatory
+comment, the `gtag('config', …)` call, and the `gtag.js` URL. To change it,
+replace all three (see *Wiring it in* below, substituting the old ID for the
+placeholder).
 
 > **What Consent Mode does and does not do.** With `analytics_storage: denied`,
 > gtag.js still loads and still sends cookieless pings to Google — it sets no
