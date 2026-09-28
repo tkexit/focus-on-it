@@ -1,7 +1,7 @@
 import { Capacitor } from '@capacitor/core'
 import { Preferences } from '@capacitor/preferences'
 
-const KEY = 'slow-mode/v1'
+const KEY = 'focus-on-it/v1'
 
 export const isNative = Capacitor.isNativePlatform()
 

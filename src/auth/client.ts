@@ -19,7 +19,7 @@ export const isAuthEnabled = Boolean(url && anonKey)
  * Redirect URLs in Supabase), on the web — the current origin.
  */
 export const authRedirectUrl = isNative
-  ? 'com.kartoshkin.slowmode://auth-callback'
+  ? 'com.kartoshkin.focusonit://auth-callback'
   : window.location.origin
 
 /**

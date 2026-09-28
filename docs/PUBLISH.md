@@ -1,4 +1,4 @@
-# Slow Mode — installing on iPhone and publishing to the App Store
+# Focus On It — installing on iPhone and publishing to the App Store
 
 The iOS project already exists in `ios/` (Capacitor). After any web-code changes:
 
@@ -19,7 +19,7 @@ A regular Apple ID is enough. An app signed with a free profile lives on the pho
    - ✅ Automatically manage signing
    - Team: pick `<your name> (Personal Team)`
    - If it complains about Bundle Identifier — it must be unique.
-     Currently set to `com.kartoshkin.slowmode`; change it to any value of your own on conflict.
+     Currently set to `com.kartoshkin.focusonit`; change it to any value of your own on conflict.
 4. Connect the iPhone via cable. On the phone: "Trust This Computer" → Yes.
 5. On the iPhone, enable Developer Mode: Settings → Privacy & Security → Developer Mode → on → reboot.
 6. In Xcode, at the top, select your iPhone as the run destination → ⌘R.
@@ -32,9 +32,9 @@ A regular Apple ID is enough. An app signed with a free profile lives on the pho
 
 1. Sign up for the [Apple Developer Program](https://developer.apple.com/programs/enroll/) — $99/year.
 2. In [App Store Connect](https://appstoreconnect.apple.com) → My Apps → `+` → New App:
-   - Platform: iOS, Name: **Slow Mode** (if taken — e.g., "Slow Mode — quiet horizon")
-   - Bundle ID: `com.kartoshkin.slowmode` (created in [Identifiers](https://developer.apple.com/account/resources/identifiers/list))
-   - SKU: `slowmode-001`
+   - Platform: iOS, Name: **Focus On It** (if taken — e.g., "Focus On It — quiet horizon")
+   - Bundle ID: `com.kartoshkin.focusonit` (created in [Identifiers](https://developer.apple.com/account/resources/identifiers/list))
+   - SKU: `focusonit-001`
 
 ### Building for the store — no sign-in (v1)
 
@@ -82,4 +82,4 @@ Decision: v1 ships without sign-in (data is local, no backend). Once demand show
 
 - Per Apple's rules (guideline 4.8): if Google sign-in is offered, Sign in with Apple **must** be offered too.
 - Sign-in must be **optional** (guideline 5.1.1) — the app must work without an account.
-- Plan: Supabase (free tier) as the backend → Sign in with Apple (native) + Google OAuth → sync `SlowModeState` across devices. The storage layer is already isolated in `src/utils/persist.ts` — that's where sync will land.
+- Plan: Supabase (free tier) as the backend → Sign in with Apple (native) + Google OAuth → sync `FocusOnItState` across devices. The storage layer is already isolated in `src/utils/persist.ts` — that's where sync will land.

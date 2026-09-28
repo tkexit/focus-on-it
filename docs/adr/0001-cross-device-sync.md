@@ -6,7 +6,7 @@
 
 ## Context
 
-Slow Mode is a local-first app: all state (`horizon`, `now`, `plan`,
+Focus On It is a local-first app: all state (`horizon`, `now`, `plan`,
 `history`) is one small object, a few kilobytes, living in localStorage +
 Capacitor Preferences (`src/utils/persist.ts`). Offline is the norm, not a
 degradation. The auth layer (Supabase, Google + Apple, PKCE) is already on
@@ -52,7 +52,7 @@ overwrites the first), so merge happens per field:
   entry's `updatedAt`;
 - after merging — the usual rollover + normalize.
 
-Merge is a pure function `merge(a, b): SlowModeState`: idempotent, with
+Merge is a pure function `merge(a, b): FocusOnItState`: idempotent, with
 deterministic tie-breaks, the single algorithmic hot spot — covered by
 unit tests.
 

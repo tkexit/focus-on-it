@@ -1,15 +1,15 @@
-import type { SlowModeState } from '../types'
+import type { FocusOnItState } from '../types'
 import { todayStr } from './date'
 
 /** Downloads the entire state as one readable JSON file. */
-export function downloadBackup(state: SlowModeState) {
+export function downloadBackup(state: FocusOnItState) {
   const blob = new Blob([JSON.stringify(state, null, 2)], {
     type: 'application/json',
   })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = `slow-mode-${todayStr()}.json`
+  a.download = `focus-on-it-${todayStr()}.json`
   a.click()
   URL.revokeObjectURL(url)
 }

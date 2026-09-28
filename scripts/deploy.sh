@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Deploy the Slow Mode landing page and/or web app to the Caddy box.
+# Deploy the Focus On It landing page and/or web app to the Caddy box.
 #
 #   ./scripts/deploy.sh landing   # landing/index.html + og.png -> unfry.dev
-#   ./scripts/deploy.sh app       # npm run build, then dist/   -> app.unfry.dev
+#   ./scripts/deploy.sh app       # npm run build, then dist/   -> app.unfry.dev (not live yet)
 #   ./scripts/deploy.sh all
 #
 # Override the target with DEPLOY_HOST, e.g. while DNS is still propagating:
@@ -13,7 +13,7 @@
 set -euo pipefail
 
 DEPLOY_HOST="${DEPLOY_HOST:-deploy@unfry.dev}"
-REMOTE_ROOT="${REMOTE_ROOT:-/opt/slowmode/site}"
+REMOTE_ROOT="${REMOTE_ROOT:-/opt/focusonit/site}"
 
 cd "$(dirname "$0")/.."
 
@@ -21,6 +21,9 @@ deploy_landing() {
   echo "==> landing -> $DEPLOY_HOST:$REMOTE_ROOT/landing/"
   if grep -q 'G-XXXXXXXXXX' landing/index.html; then
     echo "    warning: GA4 measurement ID is still the placeholder G-XXXXXXXXXX" >&2
+  fi
+  if grep -q "formspree.io/f/FORM_ID" landing/index.html; then
+    echo "    warning: Formspree FORM_ID is still the placeholder — the form will not deliver leads" >&2
   fi
   # No --delete: the landing dir is hand-curated, not a build output.
   rsync -avz landing/index.html landing/og.png "$DEPLOY_HOST:$REMOTE_ROOT/landing/"
@@ -43,4 +46,4 @@ case "${1:-}" in
 esac
 
 echo
-echo "Done.  https://unfry.dev   https://app.unfry.dev"
+echo "Done.  https://unfry.dev"
