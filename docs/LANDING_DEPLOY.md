@@ -312,15 +312,22 @@ To find it again later: **Admin** → **Data streams** → click the stream →
 
 ### Wiring it in
 
+Already done: `G-SNDH5787L7` is in `landing/index.html`. Analytics is
+**landing-only** — the app (`index.html` at the repo root, iOS, Android) stays
+tracker-free, matching the "Data Not Collected" store declarations in
+docs/PUBLISH.md. Don't add gtag to the app without revisiting those.
+
+To ship it, from the repo root:
+
 ```bash
-# from the repo root — replace with your real ID
-sed -i '' 's/G-XXXXXXXXXX/G-ABC1234567/g' landing/index.html
-grep -c 'G-ABC1234567' landing/index.html    # expect 3 (comment, config, script src)
+grep -c 'G-SNDH5787L7' landing/index.html    # expect 3 (comment, config, script src)
 ./scripts/deploy.sh landing
 ```
 
+To switch to a different ID later, replace all three occurrences
+(`sed -i '' 's/G-SNDH5787L7/G-NEWID/g' landing/index.html`) and redeploy.
 `scripts/deploy.sh` prints a warning if it uploads a page that still contains
-the placeholder, so a forgotten ID is hard to miss.
+the old `G-XXXXXXXXXX` placeholder.
 
 Then confirm: open `https://focus.kexit.dev`, click **Allow** on the banner, and
 in GA4 go to **Reports** → **Realtime**. Your visit should appear within ~30
