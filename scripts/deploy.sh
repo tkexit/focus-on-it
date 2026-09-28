@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Deploy the Slow Mode landing page and/or web app to the Caddy box.
 #
-#   ./scripts/deploy.sh landing   # landing/index.html + og.png -> focus.kexit.dev
-#   ./scripts/deploy.sh app       # npm run build, then dist/   -> app.kexit.dev
+#   ./scripts/deploy.sh landing   # landing/index.html + og.png -> unfry.dev
+#   ./scripts/deploy.sh app       # npm run build, then dist/   -> app.unfry.dev
 #   ./scripts/deploy.sh all
 #
 # Override the target with DEPLOY_HOST, e.g. while DNS is still propagating:
@@ -12,7 +12,7 @@
 # Caddyfile or docker-compose.yml require `docker compose up -d` on the server.
 set -euo pipefail
 
-DEPLOY_HOST="${DEPLOY_HOST:-deploy@focus.kexit.dev}"
+DEPLOY_HOST="${DEPLOY_HOST:-deploy@unfry.dev}"
 REMOTE_ROOT="${REMOTE_ROOT:-/opt/slowmode/site}"
 
 cd "$(dirname "$0")/.."
@@ -43,4 +43,4 @@ case "${1:-}" in
 esac
 
 echo
-echo "Done.  https://focus.kexit.dev   https://app.kexit.dev"
+echo "Done.  https://unfry.dev   https://app.unfry.dev"

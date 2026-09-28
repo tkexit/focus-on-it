@@ -4,8 +4,10 @@ Deploy plan for two static sites on one box:
 
 | Site | Served from | Source |
 | --- | --- | --- |
-| `focus.kexit.dev` | `/srv/landing` | `landing/index.html` + `landing/og.png` |
-| `app.kexit.dev` | `/srv/app` | `dist/` (from `npm run build`) |
+| `unfry.dev` | `/srv/landing` | `landing/index.html` + `landing/og.png` |
+| `app.unfry.dev` | `/srv/app` | `dist/` (from `npm run build`) |
+
+`www.unfry.dev` is redirect-only (301 → `unfry.dev`).
 
 The landing is a self-contained ~73 KB HTML file (fonts and favicon inlined; the
 only external request is the GA4 tag) plus a 30 KB Open Graph image. The app is
@@ -23,7 +25,7 @@ The config and provisioning files referenced below live in the repo:
 | Server | Hetzner Cloud **CAX11** (Arm, 2 vCPU / 4 GB / 40 GB), Ubuntu 24.04 | Cheapest sensible box, ~€4/mo incl. IPv4. x86 alt: **CX22** same price. |
 | Web server | **Caddy** in Docker | Automatic Let's Encrypt HTTPS + HTTP/2/3, gzip, one short config. |
 | TLS | Caddy auto (Let's Encrypt) | Zero-touch issuance and renewal; certs persisted in a Docker volume. |
-| Domain | **focus.kexit.dev** | Subdomain of a domain you already own — no extra cost, no registrar wait. |
+| Domain | **unfry.dev** | Own domain for the product; landing on the apex, app on `app.`. |
 | Deploy | `scripts/deploy.sh` (rsync) → served instantly | No restart needed for content changes. |
 
 Throughout, replace **`SERVER_IP`** with the server's IPv4 (and `SERVER_IPV6`
@@ -68,31 +70,34 @@ In the Hetzner Cloud Console:
 
 ## Phase 2 — DNS (~5 min + propagation)
 
-At whoever hosts DNS for `kexit.dev`, add four records — two subdomains, each
-with an A and an AAAA:
+At whoever hosts DNS for `unfry.dev`, add six records — the apex, `www`, and
+`app`, each with an A and an AAAA:
 
 ```
-A     focus.kexit.dev       SERVER_IP           TTL 300
-AAAA  focus.kexit.dev       SERVER_IPV6         TTL 300
-A     app.kexit.dev         SERVER_IP           TTL 300
-AAAA  app.kexit.dev         SERVER_IPV6         TTL 300
+A     unfry.dev             SERVER_IP           TTL 300
+AAAA  unfry.dev             SERVER_IPV6         TTL 300
+A     www.unfry.dev         SERVER_IP           TTL 300
+AAAA  www.unfry.dev         SERVER_IPV6         TTL 300
+A     app.unfry.dev         SERVER_IP           TTL 300
+AAAA  app.unfry.dev         SERVER_IPV6         TTL 300
 ```
 
-Records are on the subdomains only — nothing about `kexit.dev` itself changes, so
-whatever the apex already serves keeps working. No `www` record — nobody types
-`www.` in front of a subdomain.
+In most DNS panels the apex is entered as `@` and the others as `www` / `app`.
+Use A/AAAA on the apex, not a CNAME. Remove any parking/forwarding records the
+registrar created for the apex or `www`, or they will shadow these.
 
-Both names must resolve before Caddy starts, or certificate issuance fails for
+Every name must resolve before Caddy starts, or certificate issuance fails for
 whichever one is missing.
 
 Verify before continuing — Caddy can't get a cert until the name resolves to
 this box:
 
 ```bash
-dig +short focus.kexit.dev         # should print SERVER_IP
-dig +short AAAA focus.kexit.dev    # should print SERVER_IPV6
-dig +short app.kexit.dev           # should print SERVER_IP
-dig +short AAAA app.kexit.dev      # should print SERVER_IPV6
+dig +short unfry.dev               # should print SERVER_IP
+dig +short AAAA unfry.dev          # should print SERVER_IPV6
+dig +short www.unfry.dev           # should print SERVER_IP
+dig +short app.unfry.dev           # should print SERVER_IP
+dig +short AAAA app.unfry.dev      # should print SERVER_IPV6
 ```
 
 ## Phase 3 — Baseline hardening (~10 min)
@@ -155,14 +160,14 @@ docker compose logs -f caddy      # watch it obtain both certificates
 
 `deploy/Caddyfile` has one block per site. Two details matter:
 
-- **SPA fallback** on `app.kexit.dev` (`try_files {path} /index.html`) so a deep
+- **SPA fallback** on `app.unfry.dev` (`try_files {path} /index.html`) so a deep
   link does not 404.
 - **Cache headers.** `/assets/*` is content-hashed by Vite and pinned for a
   year; `index.html`, `sw.js`, and `manifest.webmanifest` are `no-cache`.
   `src/main.tsx` registers `/sw.js` in production, and a long-cached service
   worker would strand users on a stale build.
 
-No `www` block — both sites are subdomains, so there's no apex to redirect to.
+`www.unfry.dev` is a redirect-only block (301 → `https://unfry.dev`).
 
 The `caddy_data` volume keeps the issued certificates across restarts and
 redeploys — never delete it, or repeated `up`s can hit Let's Encrypt rate
@@ -174,12 +179,12 @@ Content changes need no restart — Caddy serves the files live. From the repo
 root, using `scripts/deploy.sh`:
 
 ```bash
-./scripts/deploy.sh landing   # index.html + og.png  -> focus.kexit.dev
-./scripts/deploy.sh app       # npm run build, dist/ -> app.kexit.dev
+./scripts/deploy.sh landing   # index.html + og.png  -> unfry.dev
+./scripts/deploy.sh app       # npm run build, dist/ -> app.unfry.dev
 ./scripts/deploy.sh all
 ```
 
-The host defaults to `deploy@focus.kexit.dev`; override it while DNS is still
+The host defaults to `deploy@unfry.dev`; override it while DNS is still
 propagating:
 
 ```bash
@@ -202,25 +207,26 @@ ssh deploy@SERVER_IP 'cd /opt/slowmode && docker compose up -d'
 ## Phase 6 — Verify
 
 ```bash
-curl -sI https://focus.kexit.dev | head        # 200, HTTP/2, valid cert
-curl -sI https://app.kexit.dev   | head        # 200
-curl -sI http://focus.kexit.dev  | head        # 308 redirect → https
+curl -sI https://unfry.dev       | head        # 200, HTTP/2, valid cert
+curl -sI https://app.unfry.dev   | head        # 200
+curl -sI http://unfry.dev        | head        # 308 redirect → https
+curl -sI https://www.unfry.dev   | grep -i location   # https://unfry.dev/
 
-curl -sI https://app.kexit.dev/sw.js | grep -i cache-control          # no-cache
-curl -sI https://app.kexit.dev/assets/ -o /dev/null                   # (see below)
-curl -s https://focus.kexit.dev/og.png -o /dev/null -w '%{http_code} %{size_download}\n'
+curl -sI https://app.unfry.dev/sw.js | grep -i cache-control          # no-cache
+curl -sI https://app.unfry.dev/assets/ -o /dev/null                   # (see below)
+curl -s https://unfry.dev/og.png -o /dev/null -w '%{http_code} %{size_download}\n'
 ```
 
 Use `curl` for the redirect check, not a browser — `.dev` is HSTS-preloaded, so
 a browser never issues the plain-HTTP request in the first place.
 
-- [ ] Both names load over HTTPS with valid, auto-renewing certs.
+- [ ] `unfry.dev` and `app.unfry.dev` load over HTTPS with valid, auto-renewing certs.
 - [ ] `http://` redirects to `https://` (curl only, per above).
 - [ ] `og.png` returns 200 and ~30 KB.
-- [ ] A deep link such as `https://app.kexit.dev/anything` serves the app, not a 404.
+- [ ] A deep link such as `https://app.unfry.dev/anything` serves the app, not a 404.
 - [ ] `/sw.js` comes back `no-cache`; a file under `/assets/` comes back `immutable`.
 - [ ] Consent banner appears on first visit, and not on the second.
-- [ ] Pasting `https://focus.kexit.dev` into Slack/Telegram shows the preview card.
+- [ ] Pasting `https://unfry.dev` into Slack/Telegram shows the preview card.
 - [ ] Dark mode / `theme-color` render on a real phone.
 - [ ] Lighthouse pass on the landing (should be near-perfect — one file, ~40 lines of JS).
 
@@ -246,7 +252,7 @@ a browser never issues the plain-HTTP request in the first place.
 - **Backups**: not really needed — everything is in git and the box is
   disposable. A Hetzner snapshot (~20% of server cost) is optional insurance.
 - **Uptime check**: a free external monitor (UptimeRobot etc.) on both URLs.
-- **Analytics**: wired, but still on the placeholder ID — see below.
+- **Analytics**: wired with Measurement ID `G-SNDH5787L7` — see below.
 
 ## Phase 8 — Analytics: GA4 with Consent Mode v2
 
@@ -271,8 +277,10 @@ cookieless tool like Plausible; both were declined.
 - While the banner is up, `body.consent-open` adds bottom padding sized from JS
   (`--consent-space`), so the fixed bar never covers the footer CTA.
 
-The **Measurement ID is still the placeholder `G-XXXXXXXXXX`**, in three places:
-the explanatory comment, the `gtag('config', …)` call, and the `gtag.js` URL.
+The **Measurement ID is `G-SNDH5787L7`**, in three places: the explanatory
+comment, the `gtag('config', …)` call, and the `gtag.js` URL. To change it,
+replace all three (see *Wiring it in* below, substituting the old ID for the
+placeholder).
 
 > **What Consent Mode does and does not do.** With `analytics_storage: denied`,
 > gtag.js still loads and still sends cookieless pings to Google — it sets no
@@ -294,7 +302,7 @@ the explanatory comment, the `gtag('config', …)` call, and the `gtag.js` URL.
    accept the Terms of Service.
 4. **Set up a data stream** — this is the step that mints the ID. Choose
    platform **Web**, then:
-   - Website URL: `https://focus.kexit.dev`
+   - Website URL: `https://unfry.dev`
    - Stream name: `Slow Mode landing`
    - Leave *Enhanced measurement* on (it adds scroll/outbound-click tracking
      with no extra code).
@@ -310,17 +318,24 @@ To find it again later: **Admin** → **Data streams** → click the stream →
 
 ### Wiring it in
 
+Already done: `G-SNDH5787L7` is in `landing/index.html`. Analytics is
+**landing-only** — the app (`index.html` at the repo root, iOS, Android) stays
+tracker-free, matching the "Data Not Collected" store declarations in
+docs/PUBLISH.md. Don't add gtag to the app without revisiting those.
+
+To ship it, from the repo root:
+
 ```bash
-# from the repo root — replace with your real ID
-sed -i '' 's/G-XXXXXXXXXX/G-ABC1234567/g' landing/index.html
-grep -c 'G-ABC1234567' landing/index.html    # expect 3 (comment, config, script src)
+grep -c 'G-SNDH5787L7' landing/index.html    # expect 3 (comment, config, script src)
 ./scripts/deploy.sh landing
 ```
 
+To switch to a different ID later, replace all three occurrences
+(`sed -i '' 's/G-SNDH5787L7/G-NEWID/g' landing/index.html`) and redeploy.
 `scripts/deploy.sh` prints a warning if it uploads a page that still contains
-the placeholder, so a forgotten ID is hard to miss.
+the old `G-XXXXXXXXXX` placeholder.
 
-Then confirm: open `https://focus.kexit.dev`, click **Allow** on the banner, and
+Then confirm: open `https://unfry.dev`, click **Allow** on the banner, and
 in GA4 go to **Reports** → **Realtime**. Your visit should appear within ~30
 seconds. Data in the standard reports lags by 24–48 h — Realtime is the only
 same-day confirmation that the tag fires.
@@ -360,5 +375,5 @@ runs as root, so `mkdir`/`chown` need no `sudo`.
 | Item | ~Monthly |
 | --- | --- |
 | CAX11 server + IPv4 | ~€4 |
-| Domain | €0 — `focus.kexit.dev` is a subdomain of a domain you already own |
+| Domain | `unfry.dev` renewal (registrar price, per year) |
 | **Total** | **~€4/mo** |
