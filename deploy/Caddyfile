@@ -22,9 +22,7 @@ unfry.dev {
 	header /index.html Cache-Control "no-cache"
 }
 
-# The app keeps answering on its old host too: notes live in localStorage, which
-# is per-origin, so a redirect would make an existing user's text vanish.
-app.unfry.dev, app.kexit.dev {
+app.unfry.dev {
 	root * /srv/app
 	encode zstd gzip
 
@@ -50,10 +48,5 @@ app.unfry.dev, app.kexit.dev {
 }
 
 www.unfry.dev {
-	redir https://unfry.dev{uri} permanent
-}
-
-# Old landing host from before the move to unfry.dev.
-focus.kexit.dev {
 	redir https://unfry.dev{uri} permanent
 }

@@ -7,9 +7,7 @@ Deploy plan for two static sites on one box:
 | `unfry.dev` | `/srv/landing` | `landing/index.html` + `landing/og.png` |
 | `app.unfry.dev` | `/srv/app` | `dist/` (from `npm run build`) |
 
-Redirect-only / legacy hosts: `www.unfry.dev` → `unfry.dev`, and
-`focus.kexit.dev` → `unfry.dev` (the landing's original home). `app.kexit.dev`
-keeps serving the app, not a redirect — see *Moving from kexit.dev* below.
+`www.unfry.dev` is redirect-only (301 → `unfry.dev`).
 
 The landing is a self-contained ~73 KB HTML file (fonts and favicon inlined; the
 only external request is the GA4 tag) plus a 30 KB Open Graph image. The app is
@@ -87,9 +85,6 @@ AAAA  app.unfry.dev         SERVER_IPV6         TTL 300
 In most DNS panels the apex is entered as `@` and the others as `www` / `app`.
 Use A/AAAA on the apex, not a CNAME. Remove any parking/forwarding records the
 registrar created for the apex or `www`, or they will shadow these.
-
-Keep the existing `focus.kexit.dev` and `app.kexit.dev` records pointing at the
-server — Caddy still serves (and needs certificates for) both.
 
 Every name must resolve before Caddy starts, or certificate issuance fails for
 whichever one is missing.
@@ -172,7 +167,7 @@ docker compose logs -f caddy      # watch it obtain both certificates
   `src/main.tsx` registers `/sw.js` in production, and a long-cached service
   worker would strand users on a stale build.
 
-`www.unfry.dev` and `focus.kexit.dev` are redirect-only blocks (301 → `https://unfry.dev`).
+`www.unfry.dev` is a redirect-only block (301 → `https://unfry.dev`).
 
 The `caddy_data` volume keeps the issued certificates across restarts and
 redeploys — never delete it, or repeated `up`s can hit Let's Encrypt rate
@@ -209,32 +204,6 @@ rsync -avz deploy/Caddyfile deploy/docker-compose.yml deploy@SERVER_IP:/opt/slow
 ssh deploy@SERVER_IP 'cd /opt/slowmode && docker compose up -d'
 ```
 
-## Moving from kexit.dev to unfry.dev
-
-The landing started on `focus.kexit.dev` and the app on `app.kexit.dev`. If
-the box is already running those, the move is:
-
-1. **DNS** — add the six `unfry.dev` records from Phase 2; leave the
-   `kexit.dev` ones in place. Wait for `dig +short unfry.dev` to return the
-   server IP.
-2. **Caddy** — upload the new `deploy/Caddyfile` and restart (it picks up
-   certificates for the new names on start; watch the log):
-   ```bash
-   rsync -avz deploy/Caddyfile deploy@SERVER_IP:/opt/slowmode/
-   ssh deploy@SERVER_IP 'cd /opt/slowmode && docker compose up -d --force-recreate'
-   ssh deploy@SERVER_IP 'cd /opt/slowmode && docker compose logs --tail 50 caddy'
-   ```
-3. **Content** — `./scripts/deploy.sh all` (or `DEPLOY_HOST=deploy@SERVER_IP …`
-   until DNS has propagated).
-4. **Verify** — Phase 6.
-
-Why the two old hosts differ: `focus.kexit.dev` is a plain page, so it 301s to
-`unfry.dev`. `app.kexit.dev` is *not* redirected — the app keeps everything in
-`localStorage`, which is scoped per origin, so sending an existing user to
-`app.unfry.dev` would show them an empty app with their notes stranded on the
-old origin. It keeps serving the same `dist/`; drop it from the Caddyfile only
-once nobody uses it (or never, it costs nothing).
-
 ## Phase 6 — Verify
 
 ```bash
@@ -242,7 +211,6 @@ curl -sI https://unfry.dev       | head        # 200, HTTP/2, valid cert
 curl -sI https://app.unfry.dev   | head        # 200
 curl -sI http://unfry.dev        | head        # 308 redirect → https
 curl -sI https://www.unfry.dev   | grep -i location   # https://unfry.dev/
-curl -sI https://focus.kexit.dev | grep -i location   # https://unfry.dev/
 
 curl -sI https://app.unfry.dev/sw.js | grep -i cache-control          # no-cache
 curl -sI https://app.unfry.dev/assets/ -o /dev/null                   # (see below)
