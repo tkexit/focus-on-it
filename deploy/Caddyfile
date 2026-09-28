@@ -1,12 +1,13 @@
-# Slow Mode — two static sites on one box.
+# Focus On It — static sites on one box.
 #
-#   focus.kexit.dev  the landing page (landing/index.html + og.png)
-#   app.kexit.dev    the React app (dist/ from `npm run build`)
+#   unfry.dev       the landing page (landing/index.html + og.png)
+#   www.unfry.dev   permanent redirect to the apex
 #
-# Caddy obtains and renews Let's Encrypt certificates automatically. Both names
-# must already resolve to this server or issuance fails.
+# Caddy obtains and renews Let's Encrypt certificates automatically. Every name
+# below must already resolve to this server (Cloudflare DNS, proxy OFF — grey
+# cloud) or issuance fails.
 
-focus.kexit.dev {
+unfry.dev {
 	root * /srv/landing
 	encode zstd gzip
 	file_server
@@ -22,27 +23,34 @@ focus.kexit.dev {
 	header /index.html Cache-Control "no-cache"
 }
 
-app.kexit.dev {
-	root * /srv/app
-	encode zstd gzip
-
-	# SPA fallback: the app has no router today, but a deep link must not 404.
-	try_files {path} /index.html
-	file_server
-
-	header {
-		Strict-Transport-Security "max-age=31536000; includeSubDomains"
-		X-Content-Type-Options    "nosniff"
-		Referrer-Policy           "strict-origin-when-cross-origin"
-		X-Frame-Options           "DENY"
-	}
-
-	# Vite content-hashes everything under /assets, so it is safe to pin forever.
-	header /assets/* Cache-Control "public, max-age=31536000, immutable"
-
-	# These three are fetched by name on every load. A long cache here would
-	# strand users on a stale build — src/main.tsx registers /sw.js in prod.
-	header /index.html           Cache-Control "no-cache"
-	header /sw.js                Cache-Control "no-cache"
-	header /manifest.webmanifest Cache-Control "no-cache"
+www.unfry.dev {
+	redir https://unfry.dev{uri} permanent
 }
+
+# The web app, once it ships. Uncomment together with an A/AAAA record for
+# app.unfry.dev — a block without DNS makes Caddy retry issuance forever.
+#
+# app.unfry.dev {
+# 	root * /srv/app
+# 	encode zstd gzip
+#
+# 	# SPA fallback: the app has no router today, but a deep link must not 404.
+# 	try_files {path} /index.html
+# 	file_server
+#
+# 	header {
+# 		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+# 		X-Content-Type-Options    "nosniff"
+# 		Referrer-Policy           "strict-origin-when-cross-origin"
+# 		X-Frame-Options           "DENY"
+# 	}
+#
+# 	# Vite content-hashes everything under /assets, so it is safe to pin forever.
+# 	header /assets/* Cache-Control "public, max-age=31536000, immutable"
+#
+# 	# Fetched by name on every load; a long cache would strand users on a
+# 	# stale build — src/main.tsx registers /sw.js in prod.
+# 	header /index.html           Cache-Control "no-cache"
+# 	header /sw.js                Cache-Control "no-cache"
+# 	header /manifest.webmanifest Cache-Control "no-cache"
+# }

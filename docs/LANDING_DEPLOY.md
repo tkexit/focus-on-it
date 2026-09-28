@@ -135,21 +135,21 @@ On the server, as `deploy` (skip if you used the cloud-init in the appendix,
 which creates these directories for you):
 
 ```bash
-sudo mkdir -p /opt/slowmode/site/landing /opt/slowmode/site/app
-sudo chown -R deploy:deploy /opt/slowmode
+sudo mkdir -p /opt/focusonit/site/landing /opt/focusonit/site/app
+sudo chown -R deploy:deploy /opt/focusonit
 ```
 
 From your **local** machine, repo root:
 
 ```bash
-rsync -avz deploy/Caddyfile deploy/docker-compose.yml deploy@SERVER_IP:/opt/slowmode/
+rsync -avz deploy/Caddyfile deploy/docker-compose.yml deploy@SERVER_IP:/opt/focusonit/
 ./scripts/deploy.sh all           # builds the app, uploads both sites
 ```
 
 Then on the **server**:
 
 ```bash
-cd /opt/slowmode && docker compose up -d
+cd /opt/focusonit && docker compose up -d
 docker compose logs -f caddy      # watch it obtain both certificates
 ```
 
@@ -195,8 +195,8 @@ build output.
 Only if you change `Caddyfile` or `docker-compose.yml`:
 
 ```bash
-rsync -avz deploy/Caddyfile deploy/docker-compose.yml deploy@SERVER_IP:/opt/slowmode/
-ssh deploy@SERVER_IP 'cd /opt/slowmode && docker compose up -d'
+rsync -avz deploy/Caddyfile deploy/docker-compose.yml deploy@SERVER_IP:/opt/focusonit/
+ssh deploy@SERVER_IP 'cd /opt/focusonit && docker compose up -d'
 ```
 
 ## Phase 6 — Verify
@@ -266,7 +266,7 @@ cookieless tool like Plausible; both were declined.
 - A banner at the foot of the page ("A quiet analytics cookie?" / *No thanks* /
   *Allow*), styled from the page's existing CSS tokens so it follows light and
   dark automatically. The choice is stored in `localStorage` under
-  `slow-mode-consent` and replayed into the `consent default` call on the next
+  `focus-on-it-consent` and replayed into the `consent default` call on the next
   visit, so the banner is only ever shown once.
 - While the banner is up, `body.consent-open` adds bottom padding sized from JS
   (`--consent-space`), so the fixed bar never covers the footer CTA.
@@ -288,14 +288,14 @@ the explanatory comment, the `gtag('config', …)` call, and the `gtag.js` URL.
 2. **If you have no Analytics account yet**: click the gear icon (**Admin**,
    bottom-left) → **Create** → **Account**. Give it a name (e.g. `kexit`), take
    the default data-sharing checkboxes → **Next**.
-3. **Create the property**: name it `Slow Mode`, set reporting time zone to
+3. **Create the property**: name it `Focus On It`, set reporting time zone to
    *Europe/Prague* and a currency → **Next** → answer the business-details
    questions (industry, size — they only shape default reports) → **Create** →
    accept the Terms of Service.
 4. **Set up a data stream** — this is the step that mints the ID. Choose
    platform **Web**, then:
    - Website URL: `https://focus.kexit.dev`
-   - Stream name: `Slow Mode landing`
+   - Stream name: `Focus On It landing`
    - Leave *Enhanced measurement* on (it adds scroll/outbound-click tracking
      with no extra code).
    - Click **Create stream**.
@@ -326,7 +326,7 @@ seconds. Data in the standard reports lags by 24–48 h — Realtime is the only
 same-day confirmation that the tag fires.
 
 If nothing shows up: check that you allowed consent (denying it is the intended
-default), and that `localStorage['slow-mode-consent']` is `granted`. Clearing
+default), and that `localStorage['focus-on-it-consent']` is `granted`. Clearing
 that key brings the banner back for retesting.
 
 ## Appendix — one-shot provisioning (optional)
@@ -334,13 +334,13 @@ that key brings the banner back for retesting.
 To collapse Phases 3–4, paste **`deploy/cloud-init.yaml`** as cloud-init
 user-data when creating the server (Console → server creation → *Cloud config*).
 It creates the `deploy` user with key-only SSH, installs Docker, and lays down
-`/opt/slowmode/site/{landing,app}`. Afterwards you still copy the two config
+`/opt/focusonit/site/{landing,app}`. Afterwards you still copy the two config
 files up and start Caddy:
 
 ```bash
-rsync -avz deploy/Caddyfile deploy/docker-compose.yml deploy@SERVER_IP:/opt/slowmode/
+rsync -avz deploy/Caddyfile deploy/docker-compose.yml deploy@SERVER_IP:/opt/focusonit/
 ./scripts/deploy.sh all
-ssh deploy@SERVER_IP 'cd /opt/slowmode && docker compose up -d'
+ssh deploy@SERVER_IP 'cd /opt/focusonit && docker compose up -d'
 ```
 
 The authorized key in that file is `~/.ssh/id_ed25519_personal.pub`. Swap it if

@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-        <string>Slow Mode</string>
+        <string>Focus On It</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -24,10 +24,10 @@
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>com.kartoshkin.slowmode</string>
+			<string>com.kartoshkin.focusonit</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.kartoshkin.slowmode</string>
+				<string>com.kartoshkin.focusonit</string>
 			</array>
 		</dict>
 	</array>

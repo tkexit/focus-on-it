@@ -1,4 +1,4 @@
-# Slow Mode
+# Focus On It
 
 A quiet space for engineers who work with AI tools and lose their sense of direction. Not a productivity app. A place to breathe and see the horizon.
 

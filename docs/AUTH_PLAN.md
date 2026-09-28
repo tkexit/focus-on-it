@@ -1,4 +1,4 @@
-# Slow Mode v1.1 — Auth Layer (Google + Apple via Supabase)
+# Focus On It v1.1 — Auth Layer (Google + Apple via Supabase)
 
 ## Why
 
@@ -17,7 +17,7 @@ existing local storage, not a replacement for it.
 - **OAuth through the system browser**, no native SDKs:
   `supabase.auth.signInWithOAuth()` + `@capacitor/browser`
   (SFSafariViewController — Google accepts it, unlike a WebView)
-  + return to the app via deep link `com.kartoshkin.slowmode://auth-callback`.
+  + return to the app via deep link `com.kartoshkin.focusonit://auth-callback`.
   Upside: no new native dependencies (zero SPM risk), one code path
   for both providers, works on the web too. Native sheets
   (`@capgo/capacitor-social-login`) are a possible later upgrade if the
@@ -34,12 +34,12 @@ existing local storage, not a replacement for it.
 2. **Supabase project** (EU region, closer to the user).
 3. **Google Cloud Console**: OAuth consent screen + Web client
    (client ID/secret — for Supabase) + iOS client (bundle
-   `com.kartoshkin.slowmode`).
+   `com.kartoshkin.focusonit`).
 4. **Apple Developer portal**: App ID with the Sign in with Apple
    capability, Services ID, `.p8` key — data for the Apple provider in
    Supabase.
 5. In Supabase, enable the Google and Apple providers, and add
-   `com.kartoshkin.slowmode://auth-callback` to Redirect URLs.
+   `com.kartoshkin.focusonit://auth-callback` to Redirect URLs.
 
 ## Development phases
 
@@ -53,7 +53,7 @@ existing local storage, not a replacement for it.
   `signInWithApple`, `signOut`. Sign-in: `signInWithOAuth({ skipBrowserRedirect:
   true })` → `Browser.open(url)` → an `App.addListener('appUrlOpen')`
   listener catches the callback, `exchangeCodeForSession` (PKCE).
-- iOS: URL scheme `com.kartoshkin.slowmode` in `Info.plist`
+- iOS: URL scheme `com.kartoshkin.focusonit` in `Info.plist`
   (`CFBundleURLTypes`).
 
 ### Phase 2 — UI

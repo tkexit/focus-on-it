@@ -1,8 +1,8 @@
-# Slow Mode — Claude Code Plan v1.0
+# Focus On It — Claude Code Plan v1.0
 
 ## Project context
 
-Slow Mode is a separate space for engineers who work with AI tools and lose their sense of direction. Not a work tool, not a productivity app. A place to exhale and see the horizon.
+Focus On It is a separate space for engineers who work with AI tools and lose their sense of direction. Not a work tool, not a productivity app. A place to exhale and see the horizon.
 
 **The feeling the product should give:**
 - Visibility: I can see where I am, what matters to me
@@ -42,7 +42,7 @@ No UI libraries — everything from scratch
 ## File structure
 
 ```
-slow-mode/
+focus-on-it/
 ├── src/
 │   ├── App.tsx
 │   ├── main.tsx
@@ -116,7 +116,7 @@ slow-mode/
 ## Data types
 
 ```typescript
-interface SlowModeState {
+interface FocusOnItState {
   horizon: {
     text: string;
     updatedAt: string;
@@ -169,11 +169,11 @@ interface NowEntry {
 
 ```
 1. Project init
-   → vite create slow-mode --template react-ts
+   → vite create focus-on-it --template react-ts
    → install dependencies
 
 2. useStorage hook
-   → get/set/clear for SlowModeState
+   → get/set/clear for FocusOnItState
    → auto-detect a new day for Now
 
 3. Horizon component
@@ -222,7 +222,7 @@ interface NowEntry {
 ## Launch command for Claude Code
 
 ```bash
-cd slow-mode
+cd focus-on-it
 npm install
 npm run dev
 ```

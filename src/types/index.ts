@@ -18,7 +18,7 @@ export interface NowEntry {
   date: string // YYYY-MM-DD
 }
 
-export interface SlowModeState {
+export interface FocusOnItState {
   horizon: Horizon
   now: Now
   plan: Plan

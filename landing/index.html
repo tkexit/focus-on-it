@@ -7,21 +7,21 @@
   <meta name="theme-color" content="#f5f2ec" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#1c1915" media="(prefers-color-scheme: dark)" />
   <meta name="description" content="A quiet place to see your horizon. Three slow questions a day — nothing else." />
-  <link rel="canonical" href="https://focus.kexit.dev/" />
+  <link rel="canonical" href="https://unfry.dev/" />
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Slow Mode" />
-  <meta property="og:url" content="https://focus.kexit.dev/" />
-  <meta property="og:title" content="Slow Mode" />
+  <meta property="og:site_name" content="Focus On It" />
+  <meta property="og:url" content="https://unfry.dev/" />
+  <meta property="og:title" content="Focus On It" />
   <meta property="og:description" content="A quiet place to see your horizon. Three slow questions a day — nothing else." />
-  <meta property="og:image" content="https://focus.kexit.dev/og.png" />
+  <meta property="og:image" content="https://unfry.dev/og.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Slow Mode — a quiet place to see your horizon." />
+  <meta property="og:image:alt" content="Focus On It — a quiet place to see your horizon." />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Slow Mode" />
+  <meta name="twitter:title" content="Focus On It" />
   <meta name="twitter:description" content="A quiet place to see your horizon. Three slow questions a day — nothing else." />
-  <meta name="twitter:image" content="https://focus.kexit.dev/og.png" />
-  <title>Slow Mode — a quiet place to see your horizon</title>
+  <meta name="twitter:image" content="https://unfry.dev/og.png" />
+  <title>Focus On It — a quiet place to see your horizon</title>
 
   <!-- Google Analytics (GA4) — replace G-XXXXXXXXXX with your Measurement ID.
        Consent Mode v2: storage is denied until the visitor allows it in the
@@ -31,7 +31,7 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     var stored = null;
-    try { stored = localStorage.getItem('slow-mode-consent'); } catch (e) {}
+    try { stored = localStorage.getItem('focus-on-it-consent'); } catch (e) {}
     gtag('consent', 'default', {
       ad_storage: 'denied',
       ad_user_data: 'denied',
@@ -302,7 +302,7 @@
         <span class="mark-line"></span>
         <span class="mark-sun"></span>
       </div>
-      <p class="masthead">Slow Mode</p>
+      <p class="masthead">Focus On It</p>
       <h1 class="thesis">A quiet place<br />to see your horizon.</h1>
       <p class="lede">Three slow questions a day. Nothing else.</p>
     </header>
@@ -314,7 +314,7 @@
     </section>
 
     <section class="stanza">
-      <p>Slow Mode is the opposite of all that.<br />
+      <p>Focus On It is the opposite of all that.<br />
         One screen. A few lines. A place to exhale<br />
         and remember where you're <span class="em">going</span>.</p>
     </section>
@@ -362,33 +362,33 @@
            full-page POST + redirect if JS is off/errors; the script at
            the end of <body> intercepts it for an inline experience. -->
       <form class="feedback" id="feedback-form" action="https://formspree.io/f/FORM_ID" method="POST">
-        <p class="feedback-intro">Help shape the first version.</p>
+        <p class="feedback-intro">Leave your email — I'll write once, when it's ready.</p>
 
         <div class="field">
-          <label for="feedback-message">What would you want in the first version?</label>
-          <textarea id="feedback-message" name="message" rows="3" required></textarea>
+          <label for="feedback-email">Email</label>
+          <input type="email" id="feedback-email" name="email" autocomplete="email" required />
         </div>
 
         <fieldset class="field field-radio">
-          <legend>Which platform matters most to you?</legend>
+          <legend>Which platform matters most to you? <span class="field-optional">(optional)</span></legend>
           <div class="radio-group">
-            <label class="radio-label"><input type="radio" name="platform" value="Web" required /> Web</label>
+            <label class="radio-label"><input type="radio" name="platform" value="Web" /> Web</label>
             <label class="radio-label"><input type="radio" name="platform" value="iOS" /> iOS</label>
             <label class="radio-label"><input type="radio" name="platform" value="Android" /> Android</label>
           </div>
         </fieldset>
 
         <div class="field">
-          <label for="feedback-email">Email <span class="field-optional">(optional, for follow-up)</span></label>
-          <input type="email" id="feedback-email" name="email" autocomplete="email" />
+          <label for="feedback-message">What would you want in the first version? <span class="field-optional">(optional)</span></label>
+          <textarea id="feedback-message" name="message" rows="3"></textarea>
         </div>
 
         <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" />
-        <input type="hidden" name="_subject" value="Slow Mode — feedback" />
-        <input type="hidden" name="_next" value="https://focus.kexit.dev/" />
+        <input type="hidden" name="_subject" value="Focus On It — new signup" />
+        <input type="hidden" name="_next" value="https://unfry.dev/" />
 
         <div class="feedback-actions">
-          <button class="consent-btn" type="submit">Send</button>
+          <button class="consent-btn" type="submit">Keep me posted</button>
           <p class="feedback-status" id="feedback-status" role="status" aria-live="polite"></p>
         </div>
       </form>
@@ -409,7 +409,7 @@
 
 <script>
   (function () {
-    var KEY = 'slow-mode-consent';
+    var KEY = 'focus-on-it-consent';
     var el = document.getElementById('consent');
     var saved = null;
     try { saved = localStorage.getItem(KEY); } catch (e) {}

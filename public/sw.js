@@ -1,5 +1,5 @@
 /* Minimal offline: navigation — network with cache fallback, assets — cache-first. */
-const CACHE = 'slow-mode-v1'
+const CACHE = 'focus-on-it-v1'
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(['/'])))

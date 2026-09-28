@@ -1,4 +1,4 @@
-# Slow Mode v1.1 — Sync Backend (cross-device synchronization)
+# Focus On It v1.1 — Sync Backend (cross-device synchronization)
 
 Implements the decision from [ADR-0001](adr/0001-cross-device-sync.md).
 Details and supersedes Phase 3 of [AUTH_PLAN.md](AUTH_PLAN.md).
@@ -66,12 +66,12 @@ revoke execute on function public.push_state from anon;
     `now`/`plan` is derived from their `date`, and for history entries
     from their `date`;
   - the `setNow`/`setPlan` setters stamp `updatedAt = now()`;
-  - storage key stays the same (`slow-mode/v1`) — normalize tolerates
+  - storage key stays the same (`focus-on-it/v1`) — normalize tolerates
     both shapes.
 
 ## Phase 2 — merge as a pure function + first tests in the repo
 
-- `src/sync/merge.ts` — `merge(a: SlowModeState, b: SlowModeState)`:
+- `src/sync/merge.ts` — `merge(a: FocusOnItState, b: FocusOnItState)`:
   - `horizon`/`plan`: the larger `updatedAt` wins; tie-break —
     deterministic (lexicographically larger text, so merge stays
     commutative);
@@ -89,7 +89,7 @@ revoke execute on function public.push_state from anon;
 ## Phase 3 — sync engine
 
 - `src/sync/engine.ts`:
-  - metadata is persisted next to the state (key `slow-mode/sync-meta`,
+  - metadata is persisted next to the state (key `focus-on-it/sync-meta`,
     same pattern as persist.ts): `{ userId, rev, dirty }` — survives a
     restart, unsynced edits aren't lost;
   - `pull()`: `select state, rev` → merge with local → if the result

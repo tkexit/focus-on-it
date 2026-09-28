@@ -1,4 +1,4 @@
-# Slow Mode — Android (Capacitor + Google Play)
+# Focus On It — Android (Capacitor + Google Play)
 
 > **Status (2026-07-19): Phases 1–3 done and smoke-tested on the API 36
 > emulator** (light + dark, back button, minimize). Phase 4 is pre-wired:
@@ -57,7 +57,7 @@ npm run build            # produce dist/
 npx cap add android      # scaffolds ./android (Gradle project) from dist/ + capacitor.config
 ```
 
-`appId` is already `com.kartoshkin.slowmode` in `capacitor.config.ts`, so the
+`appId` is already `com.kartoshkin.focusonit` in `capacitor.config.ts`, so the
 Android `applicationId` and package come out matching iOS automatically.
 
 Add mirrored scripts to `package.json`:
@@ -156,16 +156,16 @@ Signing**: you generate an *upload* key, Google holds the real app-signing key.
    reset):
 
    ```bash
-   keytool -genkey -v -keystore slowmode-upload.keystore \
-     -alias slowmode -keyalg RSA -keysize 2048 -validity 10000
+   keytool -genkey -v -keystore focusonit-upload.keystore \
+     -alias focusonit -keyalg RSA -keysize 2048 -validity 10000
    ```
 
 2. Store credentials in `android/keystore.properties` (gitignored):
 
    ```properties
-   storeFile=../../slowmode-upload.keystore
+   storeFile=../../focusonit-upload.keystore
    storePassword=…
-   keyAlias=slowmode
+   keyAlias=focusonit
    keyPassword=…
    ```
 
@@ -190,7 +190,7 @@ Signing**: you generate an *upload* key, Google holds the real app-signing key.
 ## Phase 5 — Google Play Console
 
 1. **Register** a Play developer account — $25 one-time.
-2. **Create app** → name **Slow Mode**, default language, free, "App".
+2. **Create app** → name **Focus On It**, default language, free, "App".
 3. **Store listing:** short + full description (reuse the App Store copy — "A
    quiet place to see your horizon. Three slow questions a day — nothing
    else."), a 512×512 icon, a 1024×500 feature graphic, and ≥2 phone
@@ -222,7 +222,7 @@ The OAuth code path is already platform-neutral (`signInWithOAuth` +
 Tabs — which Google accepts for OAuth just like iOS's SFSafariViewController.
 Two Android-specific additions:
 
-1. **Deep-link intent filter.** iOS declares the `com.kartoshkin.slowmode`
+1. **Deep-link intent filter.** iOS declares the `com.kartoshkin.focusonit`
    scheme in `Info.plist`; Android needs the equivalent `<intent-filter>` in
    `android/app/src/main/AndroidManifest.xml` on the main activity:
 
@@ -231,7 +231,7 @@ Two Android-specific additions:
      <action android:name="android.intent.action.VIEW" />
      <category android:name="android.intent.category.DEFAULT" />
      <category android:name="android.intent.category.BROWSABLE" />
-     <data android:scheme="com.kartoshkin.slowmode" android:host="auth-callback" />
+     <data android:scheme="com.kartoshkin.focusonit" android:host="auth-callback" />
    </intent-filter>
    ```
 
@@ -239,7 +239,7 @@ Two Android-specific additions:
    changes.
 
 2. **Google Cloud Console:** add an **Android OAuth client** (package
-   `com.kartoshkin.slowmode` + the SHA-1 of both the debug key and the Play
+   `com.kartoshkin.focusonit` + the SHA-1 of both the debug key and the Play
    app-signing key — Play Console shows the latter under Setup → App signing).
    The existing **Web** client still drives the Supabase flow; the Android
    client covers the consent screen. **Sign in with Apple works on Android too**

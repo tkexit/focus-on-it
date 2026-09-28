@@ -17,7 +17,7 @@ only automated check. On this machine Java is not in PATH; run Gradle with
 
 ## What this app is
 
-Slow Mode: one screen, three text fields (Horizon / Now / Next step) plus a
+Focus On It: one screen, three text fields (Horizon / Now / Next step) plus a
 hidden history panel. Deliberately minimal — no routing, no state library, no
 backend dependency. The product tone is quiet; copy is phrased as gentle
 questions, UI additions need a strong reason to exist. All code, comments, and
@@ -25,7 +25,7 @@ docs are in English (user directive — do not write Russian into the repo).
 
 ## Architecture
 
-**Local-first state.** The entire app state is one small `SlowModeState`
+**Local-first state.** The entire app state is one small `FocusOnItState`
 object (`src/types/index.ts`). `src/hooks/useStorage.ts` is the heart of the
 app and the only place state logic lives:
 
@@ -50,7 +50,7 @@ build). supabase-js is loaded via dynamic import behind `getClient()` in
 `src/auth/client.ts` so it ships as a separate chunk that a keyless build
 never fetches. Never import `@supabase/supabase-js` statically (types are
 fine) — it would fold ~215 kB back into the main bundle. On device, OAuth runs
-through the system browser + deep link `com.kartoshkin.slowmode://auth-callback`
+through the system browser + deep link `com.kartoshkin.focusonit://auth-callback`
 (PKCE code handled in `AuthContext`'s `appUrlOpen` listener).
 
 **Native shells.** Capacitor 8. iOS uses SPM, not CocoaPods (intentionally

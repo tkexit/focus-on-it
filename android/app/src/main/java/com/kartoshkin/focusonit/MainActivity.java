@@ -1,4 +1,4 @@
-package com.kartoshkin.slowmode;
+package com.kartoshkin.focusonit;
 
 import com.getcapacitor.BridgeActivity;
 

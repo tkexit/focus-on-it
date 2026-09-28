@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type { SlowModeState } from '../types'
+import type { FocusOnItState } from '../types'
 import { todayStr } from '../utils/date'
 import { isNative, loadLocal, loadNative, persist } from '../utils/persist'
 
 const DEBOUNCE_MS = 500
 
-function defaultState(): SlowModeState {
+function defaultState(): FocusOnItState {
   const today = todayStr()
   return {
     horizon: { text: '', updatedAt: new Date().toISOString() },
@@ -16,7 +16,7 @@ function defaultState(): SlowModeState {
 }
 
 /** Guards against garbage in localStorage and against old schema versions. */
-function normalize(raw: unknown): SlowModeState {
+function normalize(raw: unknown): FocusOnItState {
   const base = defaultState()
   if (!raw || typeof raw !== 'object') return base
   const p = raw as Record<string, any>
@@ -47,7 +47,7 @@ function normalize(raw: unknown): SlowModeState {
  * Day rollover: if the "now" entry belongs to a past day and has text,
  * it moves into history, and "now" resets to a clean slate for today.
  */
-function rollOver(state: SlowModeState): SlowModeState {
+function rollOver(state: FocusOnItState): FocusOnItState {
   const today = todayStr()
   if (state.now.date === today) return state
 
@@ -59,19 +59,19 @@ function rollOver(state: SlowModeState): SlowModeState {
   return { ...state, now: { text: '', date: today }, history }
 }
 
-function load(): SlowModeState {
+function load(): FocusOnItState {
   const raw = loadLocal()
   return raw ? rollOver(normalize(raw)) : defaultState()
 }
 
-function isEmpty(s: SlowModeState): boolean {
+function isEmpty(s: FocusOnItState): boolean {
   return (
     s.horizon.text === '' && s.now.text === '' && s.plan.text === '' && s.history.length === 0
   )
 }
 
 export function useStorage() {
-  const [state, setState] = useState<SlowModeState>(load)
+  const [state, setState] = useState<FocusOnItState>(load)
 
   // The latest state — so we can flush it to disk before leaving the page.
   const latest = useRef(state)
