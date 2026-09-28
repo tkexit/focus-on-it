@@ -55,10 +55,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const handle = CapApp.addListener('appUrlOpen', async ({ url }) => {
       if (!url.startsWith(authRedirectUrl)) return
       Browser.close().catch(() => {})
-      const code = new URL(url).searchParams.get('code')
+      const params = new URL(url).searchParams
+      // The provider returned a denial (cancel, access_denied) — no code
+      // follows. The quiet UX stays unchanged, but the reason goes to the
+      // console, or a silent sign-in failure on device is undebuggable.
+      const denied = params.get('error_description') ?? params.get('error')
+      if (denied) {
+        console.error('sign-in failed:', denied)
+        return
+      }
+      const code = params.get('code')
       if (!code) return
       const client = await getClient()
-      if (client) await client.auth.exchangeCodeForSession(code).catch(() => {})
+      if (!client) return
+      const { error } = await client.auth.exchangeCodeForSession(code)
+      if (error) console.error('sign-in failed:', error.message)
     })
     return () => {
       handle.then((h) => h.remove())
