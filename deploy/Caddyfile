@@ -1,12 +1,12 @@
 # Slow Mode — two static sites on one box.
 #
-#   focus.kexit.dev  the landing page (landing/index.html + og.png)
-#   app.kexit.dev    the React app (dist/ from `npm run build`)
+#   unfry.dev        the landing page (landing/index.html + og.png)
+#   app.unfry.dev    the React app (dist/ from `npm run build`)
 #
-# Caddy obtains and renews Let's Encrypt certificates automatically. Both names
-# must already resolve to this server or issuance fails.
+# Caddy obtains and renews Let's Encrypt certificates automatically. Every name
+# below must resolve to this server or issuance fails for that name.
 
-focus.kexit.dev {
+unfry.dev {
 	root * /srv/landing
 	encode zstd gzip
 	file_server
@@ -22,7 +22,9 @@ focus.kexit.dev {
 	header /index.html Cache-Control "no-cache"
 }
 
-app.kexit.dev {
+# The app keeps answering on its old host too: notes live in localStorage, which
+# is per-origin, so a redirect would make an existing user's text vanish.
+app.unfry.dev, app.kexit.dev {
 	root * /srv/app
 	encode zstd gzip
 
@@ -45,4 +47,13 @@ app.kexit.dev {
 	header /index.html           Cache-Control "no-cache"
 	header /sw.js                Cache-Control "no-cache"
 	header /manifest.webmanifest Cache-Control "no-cache"
+}
+
+www.unfry.dev {
+	redir https://unfry.dev{uri} permanent
+}
+
+# Old landing host from before the move to unfry.dev.
+focus.kexit.dev {
+	redir https://unfry.dev{uri} permanent
 }
