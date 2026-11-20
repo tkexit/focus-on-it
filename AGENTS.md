@@ -7,12 +7,13 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 ```bash
 npm run dev            # Vite dev server (PORT env var overrides the port)
 npm run build          # tsc + vite build — this is also the type check
+npm test               # Vitest unit tests (npm run test:watch for watch mode)
 npm run ios:open       # build, cap sync, open Xcode
 npm run android:open   # build, cap sync, open Android Studio
 ```
 
-There is no linter and no test framework — `npm run build` (strict tsc) is the
-only automated check. On this machine Java is not in PATH; run Gradle with
+Automated checks: `npm run build` (strict tsc) and `npm test` (Vitest, pure
+state logic in `src/state/`). On this machine Java is not in PATH; run Gradle with
 `JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"`.
 
 ## What this app is
@@ -26,8 +27,9 @@ docs are in English (user directive — do not write Russian into the repo).
 ## Architecture
 
 **Local-first state.** The entire app state is one small `FocusOnItState`
-object (`src/types/index.ts`). `src/hooks/useStorage.ts` is the heart of the
-app and the only place state logic lives:
+object (`src/types/index.ts`). State logic is split in two: `src/state/storage.ts`
+holds the pure functions (no React, no storage APIs, unit-tested), and
+`src/hooks/useStorage.ts` wires them to persistence and lifecycle events:
 
 - `normalize()` guards against garbage/old schemas on every load and import
 - `rollOver()` implements the day rollover: a past day's "now" text moves into
