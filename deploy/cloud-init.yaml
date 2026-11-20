@@ -8,8 +8,9 @@
 #   ./scripts/deploy.sh all
 #   ssh deploy@HOST 'cd /opt/focusonit && docker compose up -d'
 #
-# The authorized key below is ~/.ssh/id_ed25519_personal.pub. Public keys are
-# not secrets — this file is safe to commit.
+# Before use, replace <your-ssh-public-key> below with the contents of your own
+# public key (e.g. `cat ~/.ssh/id_ed25519.pub`). The server will accept SSH
+# only from that key.
 
 package_update: true
 package_upgrade: true
@@ -20,7 +21,7 @@ users:
     shell: /bin/bash
     sudo: ["ALL=(ALL) NOPASSWD:ALL"]
     ssh_authorized_keys:
-      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOykiHdOTD2T0Qwd14GgzRPIzi96Yu0Pflr2l9Aw54zS evg.kartoshkin@gmail.com
+      - <your-ssh-public-key>
 
 ssh_pwauth: false
 disable_root: true

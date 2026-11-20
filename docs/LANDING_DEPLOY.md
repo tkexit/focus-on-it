@@ -358,9 +358,8 @@ rsync -avz deploy/Caddyfile deploy/docker-compose.yml deploy@SERVER_IP:/opt/focu
 ssh deploy@SERVER_IP 'cd /opt/focusonit && docker compose up -d'
 ```
 
-The authorized key in that file is `~/.ssh/id_ed25519_personal.pub`. Swap it if
-you want to use `~/.ssh/id_ed25519_cursor.pub` instead. Public keys are not
-secrets, so the file is safe to commit.
+The file ships with a `<your-ssh-public-key>` placeholder under
+`ssh_authorized_keys` — paste your own public key there before using it.
 
 Note the ordering inside it: `users:` runs **before** `runcmd:`, and the
 `docker` group doesn't exist until the Docker install creates it. Listing
