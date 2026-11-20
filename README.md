@@ -4,13 +4,12 @@
 
 A quiet place to see your horizon. One screen, three slow questions a day, nothing else.
 
-Built end to end by one person, from problem framing to App Store, Google Play and a
-live landing page, working with AI coding agents through pull requests.
+Built end to end by one person, from problem framing to native iOS and Android builds
+and a live landing page, working with AI coding agents through pull requests.
 
 <!-- SCREENSHOT: main screen, light and dark side by side -->
 
-**Live:** [unfry.dev](https://unfry.dev) · [Web app](https://app.unfry.dev) ·
-App Store <!-- TODO: link --> · Google Play <!-- TODO: link -->
+**Live:** [unfry.dev](https://unfry.dev)
 
 ---
 
@@ -62,12 +61,14 @@ AI inside it.
 | **No silent failures** | OAuth deep-link errors used to be swallowed (`.catch(() => {})`): tap "Continue with Google", the browser closes, nothing happens, nothing logged. Now every failure path is surfaced. | [PR #3](https://github.com/tkexit/slow/pull/3) |
 | **Cross-device sync: per-field merge, optimistic CAS** | Whole-blob last-write-wins loses data in the main scenario (phone edits "now", laptop edits "plan"). Designed as a pure `merge(a, b)` with per-field LWW, history union and a `rev` counter, without Realtime. | [ADR-0001](docs/adr/0001-cross-device-sync.md) |
 
-## What shipped
+## What is built
 
-- **iOS app.** Capacitor 8 shell with SPM, native persistence, dark mode, splash and icons. <!-- TODO: App Store link -->
-- **Android app.** Edge-to-edge on Android 15+, themed system bars. <!-- TODO: Google Play link -->
-- **Web app / PWA** at [app.unfry.dev](https://app.unfry.dev), with a service worker for offline use.
-- **Landing page** at [unfry.dev](https://unfry.dev): static HTML on a Hetzner box behind Caddy,
+- **iOS app.** Capacitor 8 shell with SPM, native persistence, dark mode, splash and icons.
+  Runs on device; not yet published to the App Store.
+- **Android app.** Edge-to-edge on Android 15+, themed system bars. Runs on device; not yet
+  published to Google Play.
+- **Web app / PWA.** The same code runs in the browser, with a service worker for offline use.
+- **Landing page** (live) at [unfry.dev](https://unfry.dev): static HTML on a Hetzner box behind Caddy,
   provisioned with [cloud-init](deploy/cloud-init.yaml), GA4 with Consent Mode v2 (denied by default).
 
 <!-- SCREENSHOT: iOS and Android side by side -->
