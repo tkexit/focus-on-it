@@ -6,22 +6,22 @@
   <meta name="color-scheme" content="light dark" />
   <meta name="theme-color" content="#f5f2ec" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#1c1915" media="(prefers-color-scheme: dark)" />
-  <meta name="description" content="A quiet place to see your horizon. Three slow questions a day — nothing else." />
+  <meta name="description" content="A quiet place to see your horizon. Three slow questions a day: nothing else." />
   <link rel="canonical" href="https://unfry.dev/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Focus On It" />
   <meta property="og:url" content="https://unfry.dev/" />
   <meta property="og:title" content="Focus On It" />
-  <meta property="og:description" content="A quiet place to see your horizon. Three slow questions a day — nothing else." />
+  <meta property="og:description" content="A quiet place to see your horizon. Three slow questions a day: nothing else." />
   <meta property="og:image" content="https://unfry.dev/og.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="Focus On It — a quiet place to see your horizon." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Focus On It" />
-  <meta name="twitter:description" content="A quiet place to see your horizon. Three slow questions a day — nothing else." />
+  <meta name="twitter:description" content="A quiet place to see your horizon. Three slow questions a day: nothing else." />
   <meta name="twitter:image" content="https://unfry.dev/og.png" />
-  <title>Focus On It — a quiet place to see your horizon</title>
+  <title>Focus On It: a quiet place to see your horizon</title>
 
   <!-- Google Analytics (GA4), Measurement ID G-SNDH5787L7.
        Consent Mode v2: storage is denied until the visitor allows it in the
@@ -270,11 +270,15 @@
   .consent[hidden] { display: none; }
   .consent {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
-    display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 1.4rem;
+    display: flex; justify-content: center;
     padding: 1.1rem clamp(1.4rem, 6vw, 3rem);
     background: var(--bg);
     border-top: 1px solid var(--border);
     animation: dawn 0.9s ease both;
+  }
+  .consent-inner {
+    width: 100%; max-width: 600px;
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 1.4rem;
   }
   .consent-text { flex: 1 1 20rem; font-size: 0.92rem; color: var(--muted); margin: 0; }
   .consent-actions { display: flex; gap: 1.4rem; }
@@ -398,10 +402,12 @@
 
 
 <div class="consent" id="consent" hidden>
-  <p class="consent-text">A quiet analytics cookie, so I know the page was read? Nothing else is stored.</p>
-  <div class="consent-actions">
-    <button class="consent-btn" type="button" data-consent="denied">No thanks</button>
-    <button class="consent-btn" type="button" data-consent="granted">Allow</button>
+  <div class="consent-inner">
+    <p class="consent-text">A quiet analytics cookie, so I know the page was read? Nothing else is stored.</p>
+    <div class="consent-actions">
+      <button class="consent-btn" type="button" data-consent="denied">No thanks</button>
+      <button class="consent-btn" type="button" data-consent="granted">Allow</button>
+    </div>
   </div>
 </div>
 
