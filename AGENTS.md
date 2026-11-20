@@ -73,5 +73,6 @@ docs/ANDROID_PLAN.md (defaults produce a tiny logo on white).
 ## Docs
 
 Plans and decisions live in `docs/` (publishing checklists, auth/sync plans,
-ADR-0001 for the future cross-device sync design). docs/SYNC_PLAN.md describes
+ADR-0001 for the future cross-device sync design, ADR-0002 on why the
+product has no AI processing of user content). docs/SYNC_PLAN.md describes
 v1.1 sync — not yet implemented; local storage stays the source of truth.
