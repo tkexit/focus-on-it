@@ -1,5 +1,7 @@
 # Focus On It
 
+[![CI](https://github.com/tkexit/slow/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/tkexit/slow/actions/workflows/ci.yml)
+
 A quiet space for engineers who work with AI tools and lose their sense of direction. Not a productivity app. A place to breathe and see the horizon.
 
 ## What it does
@@ -27,6 +29,7 @@ keys in `.env.local` it is fully disabled and never even downloaded.
 ```bash
 npm install
 npm run dev
+npm test        # unit tests (Vitest)
 ```
 
 ## Native apps
