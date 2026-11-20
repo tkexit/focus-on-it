@@ -6,8 +6,7 @@
   justify-content: center;
   /* env(safe-area-inset-*) — keeps text clear of the iPhone notch and home indicator */
   padding: calc(clamp(3rem, 12vh, 8rem) + env(safe-area-inset-top, 0px))
-    calc(1.5rem + env(safe-area-inset-right, 0px))
-    calc(7rem + env(safe-area-inset-bottom, 0px))
+    calc(1.5rem + env(safe-area-inset-right, 0px)) calc(7rem + env(safe-area-inset-bottom, 0px))
     calc(1.5rem + env(safe-area-inset-left, 0px));
 }
 
@@ -48,7 +47,9 @@
   border-radius: 50%;
   background: var(--text-secondary);
   opacity: 0.25;
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
 }
 
 .dot:hover::after,

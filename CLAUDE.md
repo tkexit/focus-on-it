@@ -8,12 +8,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run dev            # Vite dev server (PORT env var overrides the port)
 npm run build          # tsc + vite build — this is also the type check
 npm test               # Vitest unit tests (npm run test:watch for watch mode)
+npm run lint           # ESLint (typescript-eslint + react-hooks)
+npm run format         # Prettier; CI runs format:check
 npm run ios:open       # build, cap sync, open Xcode
 npm run android:open   # build, cap sync, open Android Studio
 ```
 
-Automated checks: `npm run build` (strict tsc) and `npm test` (Vitest, pure
-state logic in `src/state/`). On this machine Java is not in PATH; run Gradle with
+Automated checks, all run in CI: `npm run lint`, `npm run format:check`,
+`npm run build` (strict tsc) and `npm test` (Vitest, pure state logic in
+`src/state/`). On this machine Java is not in PATH; run Gradle with
 `JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"`.
 
 ## What this app is

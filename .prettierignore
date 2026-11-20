@@ -1,0 +1,11 @@
+dist
+node_modules
+ios
+android
+landing
+public
+docs
+*.md
+package-lock.json
+deploy
+.github

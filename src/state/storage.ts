@@ -20,6 +20,8 @@ export function defaultState(): FocusOnItState {
 export function normalize(raw: unknown): FocusOnItState {
   const base = defaultState()
   if (!raw || typeof raw !== 'object') return base
+  // Untrusted input: every field read below is type-checked before use.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const p = raw as Record<string, any>
 
   return {
@@ -38,6 +40,7 @@ export function normalize(raw: unknown): FocusOnItState {
     },
     history: Array.isArray(p.history)
       ? p.history.filter(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (h: any) => h && typeof h.text === 'string' && typeof h.date === 'string',
         )
       : [],
@@ -61,7 +64,5 @@ export function rollOver(state: FocusOnItState): FocusOnItState {
 }
 
 export function isEmpty(s: FocusOnItState): boolean {
-  return (
-    s.horizon.text === '' && s.now.text === '' && s.plan.text === '' && s.history.length === 0
-  )
+  return s.horizon.text === '' && s.now.text === '' && s.plan.text === '' && s.history.length === 0
 }
