@@ -83,7 +83,7 @@ AI agents write a large share of the code here. The process around them keeps th
 - **Work lands through pull requests.** One concern per branch, a description that says
   what, why and how to verify. Agents open PRs; I review and merge.
 - **Two layers of review on every PR.** [CI](.github/workflows/ci.yml) runs the strict
-  type check, the production build and the unit tests.
+  type check, lint, formatting, the production build and the unit tests.
   [Claude Code Review](.github/workflows/claude-code-review.yml) comments on intent and
   edge cases. `@claude` in an issue or PR comment hands a task to an agent
   ([workflow](.github/workflows/claude.yml)); only repo collaborators can trigger it.
@@ -100,7 +100,7 @@ AI agents write a large share of the code here. The process around them keeps th
 - React 18, TypeScript (strict), Vite, CSS Modules
 - Capacitor 8 for iOS (SPM) and Android, with `@capacitor/preferences` for native persistence
 - Supabase (optional, lazily loaded): Google and Apple OAuth with PKCE
-- Vitest for unit tests, GitHub Actions for CI
+- Vitest, ESLint and Prettier, GitHub Actions for CI
 - Landing: static HTML, Caddy and Docker on Hetzner, provisioned with cloud-init
 
 ## Run it
@@ -109,6 +109,7 @@ AI agents write a large share of the code here. The process around them keeps th
 npm install
 npm run dev        # http://localhost:5173
 npm test           # unit tests (Vitest)
+npm run lint       # ESLint; npm run format runs Prettier
 npm run build      # strict type check + production build
 ```
 

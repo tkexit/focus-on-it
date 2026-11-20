@@ -10,8 +10,7 @@
   justify-content: center;
   /* env(safe-area-inset-*) — keeps entries clear of the notch in landscape. */
   padding: calc(clamp(3rem, 12vh, 8rem) + env(safe-area-inset-top, 0px))
-    calc(1.5rem + env(safe-area-inset-right, 0px))
-    calc(7rem + env(safe-area-inset-bottom, 0px))
+    calc(1.5rem + env(safe-area-inset-right, 0px)) calc(7rem + env(safe-area-inset-bottom, 0px))
     calc(1.5rem + env(safe-area-inset-left, 0px));
   animation: fade 0.7s ease both;
 }
