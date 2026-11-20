@@ -1,6 +1,6 @@
 # Focus On It
 
-[![CI](https://github.com/tkexit/slow/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/tkexit/slow/actions/workflows/ci.yml)
+[![CI](https://github.com/tkexit/focus-on-it/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/tkexit/focus-on-it/actions/workflows/ci.yml)
 
 A quiet place to see your horizon. One screen, three slow questions a day, nothing else.
 
@@ -53,8 +53,8 @@ AI inside it.
 | **Local storage is the source of truth** | The app must work offline and without an account (App Store guideline 5.1.1). The cloud, when it comes, is a layer on top, never a replacement. | [`src/utils/persist.ts`](src/utils/persist.ts) |
 | **Dual persistence on device** | iOS can clear WebView localStorage under storage pressure, so every write also goes to native Capacitor Preferences. Native restore only fills an *empty* state and never overwrites typed text. | [`src/utils/persist.ts`](src/utils/persist.ts), [`src/state/storage.ts`](src/state/storage.ts) |
 | **Day rollover as a pure, tested function** | Moving yesterday's text into history is the riskiest code in the app: a bug loses data silently. It is a pure function, unit-tested at day boundaries with fake timers. | [`src/state/storage.ts`](src/state/storage.ts), [tests](src/state/storage.test.ts) |
-| **Optional auth, lazily loaded** | Sign-in exists only to enable future sync. Without keys it is fully disabled, and supabase-js (~215 kB) ships as a separate chunk that a keyless build never downloads. | [PR #2](https://github.com/tkexit/slow/pull/2), [`src/auth/client.ts`](src/auth/client.ts) |
-| **No silent failures** | OAuth deep-link errors used to be swallowed (`.catch(() => {})`): tap "Continue with Google", the browser closes, nothing happens, nothing logged. Now every failure path is surfaced. | [PR #3](https://github.com/tkexit/slow/pull/3) |
+| **Optional auth, lazily loaded** | Sign-in exists only to enable future sync. Without keys it is fully disabled, and supabase-js (~215 kB) ships as a separate chunk that a keyless build never downloads. | [PR #2](https://github.com/tkexit/focus-on-it/pull/2), [`src/auth/client.ts`](src/auth/client.ts) |
+| **No silent failures** | OAuth deep-link errors used to be swallowed (`.catch(() => {})`): tap "Continue with Google", the browser closes, nothing happens, nothing logged. Now every failure path is surfaced. | [PR #3](https://github.com/tkexit/focus-on-it/pull/3) |
 | **Cross-device sync: per-field merge, optimistic CAS** | Whole-blob last-write-wins loses data in the main scenario (phone edits "now", laptop edits "plan"). Designed as a pure `merge(a, b)` with per-field LWW, history union and a `rev` counter, without Realtime. | [ADR-0001](docs/adr/0001-cross-device-sync.md) |
 
 ## What is built
