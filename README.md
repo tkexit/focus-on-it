@@ -7,8 +7,6 @@ A quiet place to see your horizon. One screen, three slow questions a day, nothi
 Built end to end by one person, from problem framing to native iOS and Android builds
 and a live landing page, working with AI coding agents through pull requests.
 
-<!-- SCREENSHOT: main screen, light and dark side by side -->
-
 **Live:** [unfry.dev](https://unfry.dev)
 
 ---
@@ -34,8 +32,6 @@ and who want one calm place to answer three questions:
 
 Yesterday's "now" quietly moves into a hidden history, so you can look back without
 being asked to.
-
-<!-- GIF: typing into Now, then opening history the next day -->
 
 ## Product principles
 
@@ -71,8 +67,6 @@ AI inside it.
 - **Landing page** (live) at [unfry.dev](https://unfry.dev): static HTML on a Hetzner box behind Caddy,
   provisioned with [cloud-init](deploy/cloud-init.yaml), GA4 with Consent Mode v2 (denied by default).
 
-<!-- SCREENSHOT: iOS and Android side by side -->
-
 ## How I build with AI
 
 AI agents write a large share of the code here. The process around them keeps the quality.
@@ -93,8 +87,6 @@ AI agents write a large share of the code here. The process around them keeps th
   rather than inventing one.
 - **Agents' work is checked, not trusted.** Tests target the code where a silent bug would
   cost user data. PR descriptions call out what was deliberately *not* done and why.
-
-<!-- SCREENSHOT: a PR with the CI check and a Claude review comment -->
 
 ## Tech stack
 
